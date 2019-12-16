@@ -28,16 +28,13 @@
             <h5 class="title is-5">Previous Profiles</h5>
             <div class="menu">
               <ul class="menu-list">
-                <li>
-                  <a class="is-active is-size-5 is-relative">
-                  cadekynaston
-                  <span class="is-size-7"><br />last pulled: Dec 15 @ 16:20</span>
-                  <button class="button is-small is-right absolute-right">Refresh</button>
+                <li v-for="u in users" :key="u.id">
+                  <a v-bind:class="u.id === user.id ? 'is-active' : ''" @click="changeCurrentUser(u.id)" class=" is-size-5 is-relative">
+                    {{u.name}}
+                    <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: Dec 15 @ 16:20</span>
+                    <button v-if="u.id === user.id" class="button is-small is-right absolute-right">Refresh</button>
                   </a>
                 </li>
-                <li><a>carstonhenderson</a></li>
-                <li><a>richardtaylordawson</a></li>
-                <li><a>scotttharvey</a></li>
               </ul>
             </div>
 
@@ -105,20 +102,6 @@
       </div>
     </div>
 
-      <!-- <div class="card">
-        <div class="card-content">
-          <div class="content">
-            <div  class="name">
-              hi
-            </div>
-            <div class="description">shit</div>
-          </div>
-        </div>
-        <footer class="card-footer">
-        </footer>
-      </div> -->
-
-
   </section>
 </template>
 
@@ -167,6 +150,7 @@ export default {
         created_at: 'July 1, 2016',
         updated_at: '2019-12-14T18:43:36Z',
       },
+      users: [],
     };
   },
   async mounted() {
@@ -177,6 +161,16 @@ export default {
     async getUser() {
       const user = await getGithubUser(this.userInput);
       this.user = user;
+
+      const currentUserIndex = this.users.findIndex(u => u.id === this.user.id);
+      if (currentUserIndex !== -1) {
+        this.users.splice(currentUserIndex, 1);
+      }
+      this.users = [user, ...this.users];
+    },
+    changeCurrentUser(id) {
+      const index = this.users.findIndex(user => user.id === id);
+      this.user = this.users[index];
     },
   },
 };
