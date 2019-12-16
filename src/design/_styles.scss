@@ -1,0 +1,24 @@
+
+//  -------------------
+// HELPER CLASSES
+//  -------------------
+
+.margin-left-10 { margin-left: 10px; }
+.margin-right-10 { margin-right: 10px; }
+.full-width { width: 100%; }
+.max-200 {
+  max-width: 200px;
+  max-height: 200px;
+ }
+
+ .absolute-right {
+   position: absolute;
+   right: 20px;
+   top: 0;
+   bottom: 0;
+   margin: auto;
+ }
+
+ .slim-tag {
+   height: .8em !important;
+ }
