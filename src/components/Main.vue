@@ -8,7 +8,7 @@
       <div class="is-flex input-container">
         <div class="field has-addons">
           <p class="control">
-            <input v-model="userInput" v-on:keyup.enter="getUser" class="input is-medium full-width username-input" type="text" placeholder="Github Username">
+            <input v-model="currentUserInput" v-on:keyup.enter="getUser" class="input is-medium full-width username-input" type="text" placeholder="Github Username">
           </p>
           <p class="control">
             <button @click="getUser" class="button is-medium is-primary">
@@ -25,13 +25,13 @@
         <div class="column is-one-third">
           <div class="box is-fullheight">
 
-            <h5 class="title is-5">Previous Profiles</h5>
+            <h5 class="title is-5">Profiles</h5>
             <div class="menu">
               <ul class="menu-list">
                 <li v-for="u in users" :key="u.id">
                   <a v-bind:class="u.id === user.id ? 'is-active' : ''" @click="changeCurrentUser(u.id)" class=" is-size-5 is-relative">
                     {{u.name}}
-                    <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: Dec 15 @ 16:20</span>
+                    <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: {{u.dataTimestamp}}</span>
                     <button v-if="u.id === user.id" class="button is-small is-right absolute-right">Refresh</button>
                   </a>
                 </li>
@@ -93,12 +93,7 @@
 
     <div class="container">
       <div class="box is-primary">
-        <div class="is-flex">
-          <figure class="image max-256">
-            <img class="" src="https://bulma.io/images/placeholders/256x256.png" alt="">
-          </figure>
-          <h2 class="is-size-3">Cade Kynaston</h2>
-        </div>
+        <h2 class="title is-2">Repos</h2>
       </div>
     </div>
 
@@ -107,7 +102,7 @@
 
 <script>
 
-import getGithubUser from '../data';
+import { getGithubUser, getGithubUserRepos } from '../data';
 
 export default {
   name: 'Main',
@@ -116,7 +111,7 @@ export default {
   },
   data() {
     return {
-      userInput: '',
+      currentUserInput: '',
       user: {
         login: 'cadekynaston',
         id: 16597609,
@@ -156,10 +151,15 @@ export default {
   async mounted() {
     // const user = await getGithubUser();
     // this.user = user;
+    const urlParams = new URLSearchParams(window.location.search);
+    this.currentUserInput = urlParams.get('u');
+    this.getUser();
   },
   methods: {
     async getUser() {
-      const user = await getGithubUser(this.userInput);
+      const user = await getGithubUser(this.currentUserInput);
+      const repos = await getGithubUserRepos(user.repos_url);
+      user.repos = repos;
       this.user = user;
 
       const currentUserIndex = this.users.findIndex(u => u.id === this.user.id);
