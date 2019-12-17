@@ -6,10 +6,11 @@
 .margin-left-10 { margin-left: 10px; }
 .margin-right-10 { margin-right: 10px; }
 .full-width { width: 100%; }
+.max-height-200 { max-height: 200px; }
 .max-200 {
   max-width: 200px;
   max-height: 200px;
- }
+}
 
  .absolute-right {
    position: absolute;
@@ -22,3 +23,5 @@
  .slim-tag {
    height: .8em !important;
  }
+
+ .overflow-scroll { overflow-x: scroll; }

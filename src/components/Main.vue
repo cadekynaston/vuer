@@ -27,7 +27,7 @@
 
             <h5 class="title is-5">Profiles</h5>
             <div class="menu">
-              <ul class="menu-list">
+              <ul class="menu-list overflow-scroll max-height-200">
                 <li v-for="u in users" :key="u.id">
                   <a v-bind:class="u.id === user.id ? 'is-active' : ''" @click="changeCurrentUser(u.id)" class=" is-size-5 is-relative">
                     {{u.name}}
@@ -152,8 +152,10 @@ export default {
     // const user = await getGithubUser();
     // this.user = user;
     const urlParams = new URLSearchParams(window.location.search);
-    this.currentUserInput = urlParams.get('u');
-    this.getUser();
+    if (urlParams.get('u')) {
+      this.currentUserInput = urlParams.get('u');
+      this.getUser();
+    }
   },
   methods: {
     async getUser() {
