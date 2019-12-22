@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container margin-top">
       <div class="box is-primary">
         <h2 class="title is-2">Repos</h2>
       </div>
@@ -102,7 +102,9 @@
 
 <script>
 
-import { getGithubUser, getGithubUserRepos } from '../data';
+import {
+  getGithubUser, getGithubUserRepos, dummyUsers, createGraphData,
+} from '../data';
 
 export default {
   name: 'Main',
@@ -112,40 +114,8 @@ export default {
   data() {
     return {
       currentUserInput: '',
-      user: {
-        login: 'cadekynaston',
-        id: 16597609,
-        node_id: 'MDQ6VXNlcjE2NTk3NjA5',
-        avatar_url: 'https://avatars1.githubusercontent.com/u/16597609?v=4',
-        gravatar_id: '',
-        url: 'https://api.github.com/users/cadekynaston',
-        html_url: 'https://github.com/cadekynaston',
-        followers_url: 'https://api.github.com/users/cadekynaston/followers',
-        following_url: 'https://api.github.com/users/cadekynaston/following{/other_user}',
-        gists_url: 'https://api.github.com/users/cadekynaston/gists{/gist_id}',
-        starred_url: 'https://api.github.com/users/cadekynaston/starred{/owner}{/repo}',
-        subscriptions_url: 'https://api.github.com/users/cadekynaston/subscriptions',
-        organizations_url: 'https://api.github.com/users/cadekynaston/orgs',
-        repos_url: 'https://api.github.com/users/cadekynaston/repos',
-        events_url: 'https://api.github.com/users/cadekynaston/events{/privacy}',
-        received_events_url: 'https://api.github.com/users/cadekynaston/received_events',
-        type: 'User',
-        site_admin: false,
-        name: 'Cade Kynaston',
-        company: '@clearlink',
-        blog: 'https://cade.codes',
-        location: 'Salt Lake City, UT',
-        email: 'cadekynaston@gmail.com',
-        hireable: true,
-        bio: 'Software Developer\r\n',
-        public_repos: 33,
-        public_gists: 3,
-        followers: 50,
-        following: 21,
-        created_at: 'July 1, 2016',
-        updated_at: '2019-12-14T18:43:36Z',
-      },
-      users: [],
+      user: dummyUsers[0],
+      users: dummyUsers,
     };
   },
   async mounted() {
@@ -164,6 +134,9 @@ export default {
       user.repos = repos;
       this.user = user;
 
+      /**
+       * Checking if this user already exists and then removing them to avoid duplicates.
+       */
       const currentUserIndex = this.users.findIndex(u => u.id === this.user.id);
       if (currentUserIndex !== -1) {
         this.users.splice(currentUserIndex, 1);
@@ -173,6 +146,7 @@ export default {
     changeCurrentUser(id) {
       const index = this.users.findIndex(user => user.id === id);
       this.user = this.users[index];
+      createGraphData(this.user);
     },
   },
 };
