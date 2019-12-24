@@ -140,7 +140,6 @@ export default {
     async getUser() {
       const user = await getGithubUser(this.currentUserInput);
       const repos = await getGithubUserRepos(user.repos_url);
-      console.log(repos);
       const graphData = createGraphData(repos);
 
       user.repos = repos;
