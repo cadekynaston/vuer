@@ -94,6 +94,10 @@
     <div class="container margin-top">
       <div class="box is-primary">
         <h2 class="title is-2">Repos</h2>
+        <div v-if="user.graphData">
+          <LineChart class="bar-chart" :chartData="user.graphData.numberOfReposByYear" />
+          <LineChart class="bar-chart" :chartData="user.graphData.totalSizeOfReposByYear" />
+        </div>
       </div>
     </div>
 
@@ -101,6 +105,8 @@
 </template>
 
 <script>
+// import cloneDeep from 'lodash/cloneDeep';
+import LineChart from './charts/LineChart';
 
 import {
   getGithubUser, getGithubUserRepos, dummyUsers, createGraphData,
@@ -108,6 +114,9 @@ import {
 
 export default {
   name: 'Main',
+  components: {
+    LineChart,
+  },
   props: {
     msg: String,
   },
@@ -131,7 +140,11 @@ export default {
     async getUser() {
       const user = await getGithubUser(this.currentUserInput);
       const repos = await getGithubUserRepos(user.repos_url);
+      console.log(repos);
+      const graphData = createGraphData(repos);
+
       user.repos = repos;
+      user.graphData = graphData;
       this.user = user;
 
       /**
@@ -146,7 +159,6 @@ export default {
     changeCurrentUser(id) {
       const index = this.users.findIndex(user => user.id === id);
       this.user = this.users[index];
-      createGraphData(this.user);
     },
   },
 };

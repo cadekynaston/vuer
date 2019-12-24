@@ -1,5 +1,5 @@
 import dummyUsers from './dummydata';
-import createGraphData from './dataManipulation';
+import createGraphData from './createGraphData';
 
 export { dummyUsers };
 export { createGraphData };

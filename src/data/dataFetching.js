@@ -12,7 +12,7 @@ export const getGithubUser = async (username) => {
 };
 
 export const getGithubUserRepos = async (url) => {
-  const response = await fetch(url);
+  const response = await fetch(`${url}?sort=created&per_page=500`);
   const json = await response.json();
   return json;
 };
