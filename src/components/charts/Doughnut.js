@@ -1,19 +1,13 @@
-import { Bar } from 'vue-chartjs';
+
+import { Doughnut } from 'vue-chartjs';
 
 const options = {
-  scales: {
-    xAxes: [{ stacked: true }],
-    yAxes: [{
-      stacked: true,
-      ticks: {
-        beginAtZero: true,
-      },
-    }],
-  },
+  rotation: 1 * Math.PI,
+  circumference: 1 * Math.PI,
 };
 
 export default {
-  extends: Bar,
+  extends: Doughnut,
   props: ['chartData'],
   mounted() {
     this.renderChart(this.chartData, options);

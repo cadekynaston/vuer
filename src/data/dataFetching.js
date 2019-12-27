@@ -14,5 +14,6 @@ export const getGithubUser = async (username) => {
 export const getGithubUserRepos = async (url) => {
   const response = await fetch(`${url}?sort=created&per_page=500`);
   const json = await response.json();
-  return json;
+  const reposForksRemoved = json.filter(repo => !repo.fork);
+  return reposForksRemoved;
 };

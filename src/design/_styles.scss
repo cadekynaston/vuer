@@ -5,6 +5,8 @@
 
 .margin-left-10 { margin-left: 10px; }
 .margin-right-10 { margin-right: 10px; }
+.margin-bottom-30 { margin-bottom: 30px; }
+.margin-top-0 { margin-top: 0; }
 .margin-top { margin-top: 1.25rem; }
 
 .full-width { width: 100%; }
@@ -27,3 +29,13 @@
  }
 
  .overflow-scroll { overflow-x: scroll; }
+
+ .user-info-tags {
+   flex-wrap: wrap;
+ }
+
+ .flex-column-small {
+   @include mobile {
+     flex-direction: column;
+   }
+ }

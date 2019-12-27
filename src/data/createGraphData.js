@@ -2,10 +2,10 @@ import moment from 'moment';
 import dateFormat from 'dateformat';
 
 // import lineGraphTemplate from './graphTemplates';
+import defaultColors from '../components/charts/config/colors';
 
 const createNumberOfReposByYear = (repos) => {
-  const cleanRepos = [...repos].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-    .filter(repo => repo.fork === false);
+  const cleanRepos = [...repos].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
   let datePlaceholder = moment();
   const earliestRepoDate = new Date(cleanRepos[0].created_at);
@@ -45,8 +45,9 @@ const createNumberOfReposByYear = (repos) => {
     labels: [],
     datasets: [
       {
-        label: 'Total number of repos',
-        backgroundColor: 'green',
+        label: 'Repos',
+        borderColor: '#3298dc',
+        fill: false,
         data: [],
       },
     ],
@@ -54,8 +55,7 @@ const createNumberOfReposByYear = (repos) => {
 };
 
 const createTotalSizeOfReposByYear = (repos) => {
-  const cleanRepos = [...repos].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-    .filter(repo => repo.fork === false);
+  const cleanRepos = [...repos].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
   let datePlaceholder = moment();
   const earliestRepoDate = new Date(cleanRepos[0].created_at);
@@ -96,21 +96,87 @@ const createTotalSizeOfReposByYear = (repos) => {
     labels: [],
     datasets: [
       {
-        label: 'Total size of repos',
-        backgroundColor: 'red',
+        label: 'Total size of repos (in MB)',
+        borderColor: '#48C774',
+        fill: false,
         data: [],
       },
     ],
   });
 };
 
+const createLanguageTypes = (repos) => {
+  const data = repos.reduce((all, current) => {
+    const tempAll = all;
+    if (!current.language) {
+      return tempAll;
+    } if (tempAll[current.language] === undefined) {
+      tempAll[current.language] = 1;
+    } else {
+      tempAll[current.language] += 1;
+    }
+    return tempAll;
+  }, {});
+
+  const returnData = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Languages',
+        backgroundColor: defaultColors,
+        data: [],
+      },
+    ],
+  };
+
+  Object.keys(data).forEach((item) => {
+    returnData.labels.push(item);
+    returnData.datasets[0].data.push(data[item]);
+  });
+  return returnData;
+};
+
+const createTopReposByStars = (repos) => {
+  let sortedRepos = [...repos].sort((a, b) => (b.stargazers_count + b.forks_count) - ((a.stargazers_count + a.forks_count)));
+
+  if (sortedRepos.length > 5) sortedRepos = sortedRepos.slice(0, 5);
+
+  const returnData = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Stars',
+        backgroundColor: defaultColors[5],
+        data: [],
+      },
+      {
+        label: 'Forks',
+        backgroundColor: defaultColors[1],
+        data: [],
+      },
+    ],
+  };
+  sortedRepos.forEach((repo) => {
+    returnData.labels.push(repo.name);
+    returnData.datasets[0].data.push(repo.stargazers_count);
+    returnData.datasets[1].data.push(repo.forks_count);
+  });
+  return returnData;
+};
+
 const createGraphData = (repos) => {
   const numberOfReposByYear = createNumberOfReposByYear(repos);
   const totalSizeOfReposByYear = createTotalSizeOfReposByYear(repos);
+  const languageTypes = createLanguageTypes(repos);
+  const topReposByStars = createTopReposByStars(repos);
+
+  numberOfReposByYear.datasets.push(...totalSizeOfReposByYear.datasets);
 
   return {
     numberOfReposByYear,
     totalSizeOfReposByYear,
+    languageTypes,
+    topReposByStars,
   };
 };
 
