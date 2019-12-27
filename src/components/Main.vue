@@ -214,8 +214,6 @@ export default {
       user.graphData = graphData;
       this.user = user;
 
-      console.log(user.graphData.topReposByStars);
-
       /**
        * Checking if this user already exists and then removing them to avoid duplicates.
        */
