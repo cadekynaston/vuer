@@ -144,7 +144,7 @@
           <article class="message is-warning">
           <div class="message-body">
            <div class="content is-small">
-             <p class="is-size-6 is-marginless"><strong>NOTE:</strong></p>
+             <p class="is-marginless"><strong>NOTE:</strong></p>
              <ul style="margin-top: 0">
                <li>Datasets may be toggled by clicking on the key for each graph.</li>
                <li>Forked repos have been ommitted from these results.</li>
