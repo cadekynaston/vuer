@@ -183,12 +183,12 @@
               <td>{{repo.open_issues}}</td>
               <td>{{repo.language}}</td>
               <td>
-                <a :href="repo.html_url">
+                <a :href="repo.html_url" target="_blank">
                   <span class="icon">
                     <font-awesome-icon :icon="['fab', 'github']" />
                   </span>
                 </a>
-                <a v-if="repo.homepage !== null && repo.homepage !== ''" :href="repo.homepage">
+                <a v-if="repo.homepage !== null && repo.homepage !== ''" :href="repo.homepage"  target="_blank">
                   <span class="icon">
                     <font-awesome-icon :icon="['fas', 'external-link-alt']" />
                   </span>
