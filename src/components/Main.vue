@@ -169,58 +169,9 @@
       <div v-if="user" class="box is-primary">
         <h2 class="title is-2">Repos</h2>
 
-          <div class="container">
-            <div class="is-flex input-container">
-              <div class="field">
-                <p class="control has-icons-left is-large">
-                  <input v-model="currentRepoFilter" v-on:keyup="filterRepos" class="input is-large full-width username-input" type="text" placeholder="Filter Repos">
-                  <span class="icon is-left">
-                    <font-awesome-icon class="" :icon="['fas', 'search']" />
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
+        <TableFilter @filterUpdated="filterRepos" />
         <div class="full-width overflow-scroll">
-          <table class="table is-fullwidth is-hoverable is-narrow">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Links</th>
-                <th>Size (KB)</th>
-                <th>Stars</th>
-                <th>Forks</th>
-                <th>Issues</th>
-                <th>Language</th>
-                <th>Created</th>
-                <th>Modified</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="repo in tableRepos" :key="repo.id">
-                <td><strong>{{repo.name}}</strong></td>
-                <td nowrap>
-                  <a :href="repo.html_url" target="_blank">
-                    <span class="icon">
-                      <font-awesome-icon :icon="['fab', 'github']" />
-                    </span>
-                  </a>
-                  <a v-if="repo.homepage !== null && repo.homepage !== ''" :href="repo.homepage"  target="_blank">
-                    <span class="icon">
-                      <font-awesome-icon :icon="['fas', 'external-link-alt']" />
-                    </span>
-                  </a>
-                </td>
-                <td>{{repo.size}}</td>
-                <td>{{repo.stargazers_count}}</td>
-                <td>{{repo.forks}}</td>
-                <td>{{repo.open_issues}}</td>
-                <td>{{repo.language}}</td>
-                <td>{{formatDate(repo.created_at, 'MM/D/YYYY')}}</td>
-                <td>{{formatDate(repo.updated_at, 'MM/D/YYYY')}}</td>
-              </tr>
-            </tbody>
-          </table>
+          <RepoTable :table-data="tableRepos" />
         </div>
       </div>
     </div>
@@ -229,15 +180,18 @@
 </template>
 
 <script>
-import moment from 'moment';
 
-import LineChart from './charts/LineChart';
-import Doughnut from './charts/Doughnut';
-import Bar from './charts/Bar';
+import LineChart from './charts/LineChart.vue';
+import Doughnut from './charts/Doughnut.vue';
+import Bar from './charts/Bar.vue';
+import RepoTable from './RepoTable.vue';
+import TableFilter from './TableFilter.vue';
 
 import {
   getGithubUser, getGithubUserRepos, createGraphData,
 } from '../data';
+
+import { formatDate } from '../shared/mixins';
 
 export default {
   name: 'Main',
@@ -245,7 +199,10 @@ export default {
     LineChart,
     Doughnut,
     Bar,
+    RepoTable,
+    TableFilter,
   },
+  mixins: [formatDate],
   props: {
     msg: String,
   },
@@ -257,7 +214,6 @@ export default {
       isLoading: false,
       tableRepos: [],
       currentUserInput: '',
-      currentRepoFilter: '',
     };
   },
   async mounted() {
@@ -306,11 +262,8 @@ export default {
       this.user = user;
       this.tableRepos = this.user.repos;
     },
-    formatDate(date, desiredFormat) {
-      return moment(date).format(desiredFormat);
-    },
-    filterRepos() {
-      this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(this.currentRepoFilter.toLowerCase()));
+    filterRepos(filter) {
+      this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase()));
     },
   },
 };
