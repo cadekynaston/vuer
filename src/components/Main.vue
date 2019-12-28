@@ -9,7 +9,6 @@
             <input v-model="currentUserInput" v-on:keyup.enter="getUser" class="input is-large full-width username-input" type="text" placeholder="Github Username">
             <span class="icon is-left">
               <font-awesome-icon class="" :icon="['fas', 'user']" />
-
             </span>
           </p>
           <p class="control">
@@ -157,7 +156,7 @@
     </div>
 
     <div class="container margin-top">
-      <div class="box is-primary">
+      <div class="box is-primary overflow-scroll">
         <h2 class="title is-2">Repos</h2>
           <table class="table is-fullwidth is-hoverable is-narrow">
           <thead>
