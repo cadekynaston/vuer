@@ -1,4 +1,4 @@
-
+<script>
 import { Line } from 'vue-chartjs';
 
 const options = {
@@ -27,3 +27,4 @@ export default {
   },
 
 };
+</script>

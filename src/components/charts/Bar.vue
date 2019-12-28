@@ -1,3 +1,4 @@
+<script>
 import { Bar } from 'vue-chartjs';
 
 const options = {
@@ -11,7 +12,6 @@ const options = {
     }],
   },
 };
-
 export default {
   extends: Bar,
   props: ['chartData'],
@@ -25,3 +25,4 @@ export default {
   },
 
 };
+</script>
