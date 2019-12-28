@@ -185,7 +185,7 @@
           <tbody>
             <tr v-for="repo in user.repos" :key="repo.id">
               <td><strong>{{repo.name}}</strong></td>
-              <td>
+              <td nowrap>
                 <a :href="repo.html_url" target="_blank">
                   <span class="icon">
                     <font-awesome-icon :icon="['fab', 'github']" />

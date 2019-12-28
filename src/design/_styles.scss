@@ -37,9 +37,7 @@
 
  .overflow-scroll { overflow: scroll; }
 
- .flex-wrap {
-   flex-wrap: wrap;
- }
+ .flex-wrap { flex-wrap: wrap; }
 
  .flex-column-small {
    @include mobile {
