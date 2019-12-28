@@ -162,26 +162,19 @@
           <thead>
             <tr>
               <th>Name</th>
-              <th>Created</th>
-              <th>Modified</th>
+              <th>Links</th>
               <th>Size (KB)</th>
               <th>Stars</th>
               <th>Forks</th>
               <th>Issues</th>
               <th>Language</th>
-              <th>Links</th>
+              <th>Created</th>
+              <th>Modified</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="repo in user.repos" :key="repo.id">
               <td><strong>{{repo.name}}</strong></td>
-              <td>{{formatRepoDate(repo.created_at)}}</td>
-              <td>{{formatRepoDate(repo.updated_at)}}</td>
-              <td>{{repo.size}}</td>
-              <td>{{repo.stargazers_count}}</td>
-              <td>{{repo.forks}}</td>
-              <td>{{repo.open_issues}}</td>
-              <td>{{repo.language}}</td>
               <td>
                 <a :href="repo.html_url" target="_blank">
                   <span class="icon">
@@ -194,6 +187,13 @@
                   </span>
                 </a>
               </td>
+              <td>{{repo.size}}</td>
+              <td>{{repo.stargazers_count}}</td>
+              <td>{{repo.forks}}</td>
+              <td>{{repo.open_issues}}</td>
+              <td>{{repo.language}}</td>
+              <td>{{formatRepoDate(repo.created_at)}}</td>
+              <td>{{formatRepoDate(repo.updated_at)}}</td>
             </tr>
           </tbody>
         </table>
