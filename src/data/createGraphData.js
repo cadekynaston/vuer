@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-// import lineGraphTemplate from './graphTemplates';
 import defaultColors from '../shared/colors';
 
 const createNumberOfReposByYear = (repos) => {
