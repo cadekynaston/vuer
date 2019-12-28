@@ -166,7 +166,7 @@
     </div>
 
     <div class="container margin-top">
-      <div v-if="user" class="box is-primary overflow-scroll">
+      <div v-if="user" class="box is-primary">
         <h2 class="title is-2">Repos</h2>
 
           <div class="container">
@@ -181,46 +181,47 @@
               </div>
             </div>
           </div>
-
+        <div class="full-width overflow-scroll">
           <table class="table is-fullwidth is-hoverable is-narrow">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Links</th>
-              <th>Size (KB)</th>
-              <th>Stars</th>
-              <th>Forks</th>
-              <th>Issues</th>
-              <th>Language</th>
-              <th>Created</th>
-              <th>Modified</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="repo in tableRepos" :key="repo.id">
-              <td><strong>{{repo.name}}</strong></td>
-              <td nowrap>
-                <a :href="repo.html_url" target="_blank">
-                  <span class="icon">
-                    <font-awesome-icon :icon="['fab', 'github']" />
-                  </span>
-                </a>
-                <a v-if="repo.homepage !== null && repo.homepage !== ''" :href="repo.homepage"  target="_blank">
-                  <span class="icon">
-                    <font-awesome-icon :icon="['fas', 'external-link-alt']" />
-                  </span>
-                </a>
-              </td>
-              <td>{{repo.size}}</td>
-              <td>{{repo.stargazers_count}}</td>
-              <td>{{repo.forks}}</td>
-              <td>{{repo.open_issues}}</td>
-              <td>{{repo.language}}</td>
-              <td>{{formatDate(repo.created_at, 'MM/D/YYYY')}}</td>
-              <td>{{formatDate(repo.updated_at, 'MM/D/YYYY')}}</td>
-            </tr>
-          </tbody>
-        </table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Links</th>
+                <th>Size (KB)</th>
+                <th>Stars</th>
+                <th>Forks</th>
+                <th>Issues</th>
+                <th>Language</th>
+                <th>Created</th>
+                <th>Modified</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="repo in tableRepos" :key="repo.id">
+                <td><strong>{{repo.name}}</strong></td>
+                <td nowrap>
+                  <a :href="repo.html_url" target="_blank">
+                    <span class="icon">
+                      <font-awesome-icon :icon="['fab', 'github']" />
+                    </span>
+                  </a>
+                  <a v-if="repo.homepage !== null && repo.homepage !== ''" :href="repo.homepage"  target="_blank">
+                    <span class="icon">
+                      <font-awesome-icon :icon="['fas', 'external-link-alt']" />
+                    </span>
+                  </a>
+                </td>
+                <td>{{repo.size}}</td>
+                <td>{{repo.stargazers_count}}</td>
+                <td>{{repo.forks}}</td>
+                <td>{{repo.open_issues}}</td>
+                <td>{{repo.language}}</td>
+                <td>{{formatDate(repo.created_at, 'MM/D/YYYY')}}</td>
+                <td>{{formatDate(repo.updated_at, 'MM/D/YYYY')}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
