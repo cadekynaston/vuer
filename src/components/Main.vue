@@ -5,23 +5,33 @@
     <div class="container">
       <div class="is-flex input-container">
         <div class="field has-addons">
-          <p class="control has-icons-left">
-            <input v-model="currentUserInput" v-on:keyup.enter="getUser" class="input is-large full-width username-input" type="text" placeholder="Github Username">
+          <p :class="isLoading ? 'is-loading' : ''" class="control has-icons-left is-large">
+            <input v-model="currentUserInput" v-on:keyup.enter="getUser" class="input is-large full-width username-input" type="text" placeholder="Github Username" :disabled="isLoading">
             <span class="icon is-left">
               <font-awesome-icon class="" :icon="['fas', 'user']" />
             </span>
           </p>
           <p class="control">
-            <button @click="getUser" class="button is-large is-primary">
+            <button @click="getUser" class="button is-large is-primary" :disabled="isLoading">
               Search
             </button>
           </p>
         </div>
       </div>
+
+      <article v-if="userNotFound" class="message is-danger margin-bottom">
+        <div class="message-header">
+          <p>Error</p>
+          <button @click="hideErrorMessage()" class="delete" aria-label="delete"></button>
+        </div>
+        <div class="message-body">
+          A GitHub account with that username does not exist.
+        </div>
+      </article>
     </div>
 
     <div class="container">
-      <div class="columns is-desktop">
+      <div v-if="user" class="columns is-desktop">
 
         <div class="column is-one-third-desktop">
           <div class="box is-fullheight">
@@ -101,12 +111,12 @@
                     </div>
                   </div>
                   <div class="is-flex flex-wrap">
-                    <div v-if="user.email" class="tag margin-right-10 is-light">
+                    <div v-if="user.email" class="tag margin-right-10 margin-bottom-10 is-light">
                       <a :href="`mailto:${user.email}`">{{user.email}}</a>
                     </div>
-                    <div v-if="user.company" class="tag margin-right-10 is-info is-light">{{user.company}}</div>
-                    <div v-if="user.location" class="tag margin-right-10 is-info is-light">{{user.location}}</div>
-                    <div v-if="joinDate" class="tag margin-right-10 is-info is-light">Joined: {{joinDate}}</div>
+                    <div v-if="user.company" class="tag margin-right-10 margin-bottom-10 is-info is-light">{{user.company}}</div>
+                    <div v-if="user.location" class="tag margin-right-10 margin-bottom-10 is-info is-light">{{user.location}}</div>
+                    <div v-if="joinDate" class="tag margin-right-10 margin-bottom-10 is-info is-light">Joined: {{joinDate}}</div>
                   </div>
                 </div>
               </div>
@@ -118,7 +128,7 @@
     </div>
 
     <div class="container margin-top">
-      <div class="box is-primary">
+      <div v-if="user" class="box is-primary">
         <h2 class="title is-2">Overview</h2>
         <div v-if="user.graphData">
           <div class="columns is-desktop">
@@ -156,7 +166,7 @@
     </div>
 
     <div class="container margin-top">
-      <div class="box is-primary overflow-scroll">
+      <div v-if="user" class="box is-primary overflow-scroll">
         <h2 class="title is-2">Repos</h2>
           <table class="table is-fullwidth is-hoverable is-narrow">
           <thead>
@@ -211,7 +221,7 @@ import Doughnut from './charts/Doughnut';
 import Bar from './charts/Bar';
 
 import {
-  getGithubUser, getGithubUserRepos, dummyUsers, createGraphData,
+  getGithubUser, getGithubUserRepos, createGraphData,
 } from '../data';
 
 export default {
@@ -227,8 +237,10 @@ export default {
   data() {
     return {
       currentUserInput: '',
-      user: dummyUsers[0],
-      users: dummyUsers,
+      user: null,
+      users: [],
+      userNotFound: false,
+      isLoading: false,
     };
   },
   async mounted() {
@@ -249,22 +261,29 @@ export default {
   },
   methods: {
     async getUser() {
+      this.isLoading = true;
       const user = await getGithubUser(this.currentUserInput);
-      const repos = await getGithubUserRepos(user.repos_url);
-      const graphData = createGraphData(repos);
 
-      user.repos = repos;
-      user.graphData = graphData;
-      this.user = user;
+      if (user.error) {
+        this.userNotFound = true;
+      } else {
+        const repos = await getGithubUserRepos(user.repos_url);
+        const graphData = createGraphData(repos);
 
-      /**
+        user.repos = repos;
+        user.graphData = graphData;
+        this.user = user;
+
+        /**
        * Checking if this user already exists and then removing them to avoid duplicates.
        */
-      const currentUserIndex = this.users.findIndex(u => u.id === this.user.id);
-      if (currentUserIndex !== -1) {
-        this.users.splice(currentUserIndex, 1);
+        const currentUserIndex = this.users.findIndex(u => u.id === this.user.id);
+        if (currentUserIndex !== -1) {
+          this.users.splice(currentUserIndex, 1);
+        }
+        this.users = [user, ...this.users];
       }
-      this.users = [user, ...this.users];
+      this.isLoading = false;
     },
     changeCurrentUser(id) {
       const index = this.users.findIndex(user => user.id === id);
@@ -272,6 +291,9 @@ export default {
     },
     formatRepoDate(date) {
       return moment(date).format('MM/D/YYYY');
+    },
+    hideErrorMessage() {
+      this.userNotFound = false;
     },
   },
 };

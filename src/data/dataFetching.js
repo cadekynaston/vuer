@@ -1,14 +1,22 @@
 import moment from 'moment';
 
 export const getGithubUser = async (username) => {
-  const response = await fetch(`https://api.github.com/users/${username}`);
-  const json = await response.json();
-  const dataTimestamp = moment(new Date()).format('MMM Do @ H:MM');
-  const returnData = {
-    ...json,
-    dataTimestamp,
-  };
-  return returnData;
+  try {
+    const response = await fetch(`https://api.github.com/users/${username}`);
+    const json = await response.json();
+    const dataTimestamp = moment(new Date()).format('MMM Do @ H:MM');
+    const returnData = {
+      ...json,
+      dataTimestamp,
+    };
+    if (returnData.message === 'Not Found') {
+      returnData.error = 'Not found';
+    }
+    return returnData;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
 };
 
 export const getGithubUserRepos = async (url) => {
