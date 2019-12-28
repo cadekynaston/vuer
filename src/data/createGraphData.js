@@ -1,5 +1,4 @@
 import moment from 'moment';
-import dateFormat from 'dateformat';
 
 // import lineGraphTemplate from './graphTemplates';
 import defaultColors from '../components/charts/config/colors';
@@ -39,7 +38,7 @@ const createNumberOfReposByYear = (repos) => {
 
   return reposByDate.reduce((all, current) => {
     all.datasets[0].data.push(current.numberOfRepos);
-    all.labels.push(dateFormat(current.date, 'mmm yyyy'));
+    all.labels.push(moment(current.date).format('MMM YYYY'));
     return all;
   }, {
     labels: [],
@@ -75,7 +74,7 @@ const createTotalSizeOfReposByYear = (repos) => {
   cleanRepos.forEach((repo) => {
     const nextIndex = reposByDate.findIndex(r => new Date(repo.created_at) < r.date);
     test += repo.size / 1000;
-    reposByDate[nextIndex].sizeOfRepos = test;
+    reposByDate[nextIndex].sizeOfRepos = test.toFixed(2);
   });
 
   let sizeOfRepos = 0;
@@ -90,7 +89,7 @@ const createTotalSizeOfReposByYear = (repos) => {
 
   return reposByDate.reduce((all, current) => {
     all.datasets[0].data.push(current.sizeOfRepos);
-    all.labels.push(dateFormat(current.date, 'mmm yyyy'));
+    all.labels.push(moment(current.date).format('MMM YYYY'));
     return all;
   }, {
     labels: [],

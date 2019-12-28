@@ -34,7 +34,7 @@
                   <a v-bind:class="u.id === user.id ? 'is-active' : ''" @click="changeCurrentUser(u.id)" class=" is-size-5 is-relative">
                     {{u.login}}
                     <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: {{u.dataTimestamp}}</span>
-                    <button v-if="u.id === user.id" class="button is-small is-right absolute-right">Refresh</button>
+                    <!-- <button v-if="u.id === user.id" class="button is-small is-right absolute-right">Refresh</button> -->
                   </a>
                 </li>
               </ul>
@@ -61,8 +61,8 @@
 
                   <div class="user-links margin-bottom-30">
 
-                    <a :href="user.html_url" target="_blank">
-                      <button class="button">
+                    <a :href="user.html_url" class="margin-right-10" target="_blank">
+                      <button class="button margin-bottom-10">
                         <span class="icon">
                           <font-awesome-icon class="icon is-medium" :icon="['fab', 'github']" />
                         </span>
@@ -70,38 +70,38 @@
                       </button>
                     </a>
 
-                    <a v-if="user.blog" target="_blank" class="margin-left-10" :href="`${user.blog}`">
+                    <a v-if="user.blog" target="_blank" :href="`${user.blog}`">
                       <button class="button">
                         <span class="icon">
                           <font-awesome-icon class="icon is-medium" :icon="['fas', 'user-circle']" />
                         </span>
-                        <span>Blog</span>
+                        <span>Personal</span>
                       </button>
                     </a>
 
                   </div>
 
-                  <div class="is-flex flex-column-small user-info-tags">
-                    <div class="has-text-centered margin-right-10 margin-bottom-30">
+                  <div class="is-flex flex-column-small flex-wrap">
+                    <div class="margin-right-10 margin-bottom-30">
                       <div class="tag is-info small slim-tag">
                         <p class="title is-1">{{user.followers}}</p>
                         <p class="subtitle">Followers</p>
                       </div>
                     </div>
-                    <div class="has-text-centered margin-right-10 margin-bottom-30">
+                    <div class="margin-right-10 margin-bottom-30">
                       <div class="tag is-warning slim-tag">
                         <p class="title is-1">{{user.following}}</p>
                         <p class="subtitle">Following</p>
                       </div>
                     </div>
-                    <div class="has-text-centered margin-right-10 margin-bottom-30">
+                    <div class="margin-right-10 margin-bottom-30">
                       <div class="tag is-success slim-tag">
                         <p class="title is-1">{{user.public_repos}}</p>
                         <p class="subtitle">Repos</p>
                       </div>
                     </div>
                   </div>
-                  <div class="is-flex">
+                  <div class="is-flex flex-wrap">
                     <div v-if="user.email" class="tag margin-right-10 is-light">
                       <a :href="`mailto:${user.email}`">{{user.email}}</a>
                     </div>
@@ -124,17 +124,17 @@
         <div v-if="user.graphData">
           <div class="columns is-desktop">
 
-            <div class="column has-text-centered is-one-third">
+            <div class="column has-text-centered is-one-third-desktop">
               <p class="is-size-5"><strong>Repos Over Time</strong></p>
               <LineChart class="chart" :chartData="user.graphData.numberOfReposByYear" />
             </div>
 
-            <div class="column has-text-centered is-one-third">
+            <div class="column has-text-centered is-one-third-desktop">
               <p class="is-size-5"><strong>Popular Repos</strong></p>
               <Bar class="chart" :chartData="user.graphData.topReposByStars" />
             </div>
 
-            <div class="column has-text-centered is-one-third">
+            <div class="column has-text-centered is-one-third-desktop">
               <p class="is-size-5"><strong>Languages</strong></p>
               <Doughnut class="chart" :chartData="user.graphData.languageTypes" />
             </div>
@@ -156,11 +156,55 @@
       </div>
     </div>
 
+    <div class="container margin-top">
+      <div class="box is-primary">
+        <h2 class="title is-2">Repos</h2>
+          <table class="table is-fullwidth is-hoverable is-narrow">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Created</th>
+              <th>Modified</th>
+              <th>Size (KB)</th>
+              <th>Stars</th>
+              <th>Forks</th>
+              <th>Issues</th>
+              <th>Language</th>
+              <th>Links</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="repo in user.repos" :key="repo.id">
+              <td><strong>{{repo.name}}</strong></td>
+              <td>{{formatRepoDate(repo.created_at)}}</td>
+              <td>{{formatRepoDate(repo.updated_at)}}</td>
+              <td>{{repo.size}}</td>
+              <td>{{repo.stargazers_count}}</td>
+              <td>{{repo.forks}}</td>
+              <td>{{repo.open_issues}}</td>
+              <td>{{repo.language}}</td>
+              <td>
+                <a :href="repo.html_url">
+                  <span class="icon">
+                    <font-awesome-icon :icon="['fab', 'github']" />
+                  </span>
+                </a>
+                <a v-if="repo.homepage !== null && repo.homepage !== ''" :href="repo.homepage">
+                  <span class="icon">
+                    <font-awesome-icon :icon="['fas', 'external-link-alt']" />
+                  </span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </section>
 </template>
 
 <script>
-// import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
 
 import LineChart from './charts/LineChart';
@@ -226,6 +270,9 @@ export default {
     changeCurrentUser(id) {
       const index = this.users.findIndex(user => user.id === id);
       this.user = this.users[index];
+    },
+    formatRepoDate(date) {
+      return moment(date).format('MM/D/YYYY');
     },
   },
 };

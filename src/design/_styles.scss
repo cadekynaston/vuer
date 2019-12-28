@@ -5,6 +5,7 @@
 
 .margin-left-10 { margin-left: 10px; }
 .margin-right-10 { margin-right: 10px; }
+.margin-bottom-10 { margin-bottom: 10px; }
 .margin-bottom-30 { margin-bottom: 30px; }
 .margin-top-0 { margin-top: 0; }
 .margin-top { margin-top: 1.25rem; }
@@ -28,9 +29,14 @@
    height: .8em !important;
  }
 
+ .centered {
+   margin-left: auto;
+   margin-right: auto;
+ }
+
  .overflow-scroll { overflow-x: scroll; }
 
- .user-info-tags {
+ .flex-wrap {
    flex-wrap: wrap;
  }
 
