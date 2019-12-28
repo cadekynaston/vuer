@@ -14,7 +14,6 @@ export const getGithubUser = async (username) => {
     }
     return returnData;
   } catch (error) {
-    console.error(error);
     return error;
   }
 };
