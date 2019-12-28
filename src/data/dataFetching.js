@@ -18,9 +18,37 @@ export const getGithubUser = async (username) => {
   }
 };
 
+const getRemainingRepos = async (url) => {
+  let latestResponse = [];
+  let allResponses = [];
+  let pageCount = 2;
+  // I need to await the response inside the loop to
+  // determine if all repos have been found
+  /* eslint-disable no-await-in-loop */
+  do {
+    const response = await fetch(`${url}?sort=created&per_page=100&page=${pageCount}`);
+    latestResponse = await response.json();
+    allResponses = [
+      ...allResponses,
+      ...latestResponse,
+    ];
+    pageCount += 1;
+  } while (latestResponse.length === 100);
+  return allResponses;
+};
+
 export const getGithubUserRepos = async (url) => {
-  const response = await fetch(`${url}?sort=created&per_page=500`);
+  const response = await fetch(`${url}?sort=created&per_page=100`);
   const json = await response.json();
-  const reposCleaned = json.filter(repo => !repo.fork).sort((a, b) => b.stargazers_count - a.stargazers_count);
+  let remainingRepos = [];
+
+  if (json.length === 100) {
+    remainingRepos = await getRemainingRepos(url);
+  }
+  const allRepos = [
+    ...json,
+    ...remainingRepos,
+  ];
+  const reposCleaned = allRepos.filter(repo => !repo.fork).sort((a, b) => b.stargazers_count - a.stargazers_count);
   return reposCleaned;
 };

@@ -22,7 +22,7 @@
       <article v-if="userNotFound" class="message is-danger margin-bottom">
         <div class="message-header">
           <p>Error</p>
-          <button @click="hideErrorMessage()" class="delete" aria-label="delete"></button>
+          <button @click="userNotFound = false" class="delete" aria-label="delete"></button>
         </div>
         <div class="message-body">
           A GitHub account with that username does not exist.
@@ -116,7 +116,7 @@
                     </div>
                     <div v-if="user.company" class="tag margin-right-10 margin-bottom-10 is-info is-light">{{user.company}}</div>
                     <div v-if="user.location" class="tag margin-right-10 margin-bottom-10 is-info is-light">{{user.location}}</div>
-                    <div v-if="joinDate" class="tag margin-right-10 margin-bottom-10 is-info is-light">Joined: {{joinDate}}</div>
+                    <div v-if="user.created_at" class="tag margin-right-10 margin-bottom-10 is-info is-light">Joined: {{formatDate(user.created_at, 'MMMM Do, YYYY')}}</div>
                   </div>
                 </div>
               </div>
@@ -168,6 +168,20 @@
     <div class="container margin-top">
       <div v-if="user" class="box is-primary overflow-scroll">
         <h2 class="title is-2">Repos</h2>
+
+          <div class="container">
+            <div class="is-flex input-container">
+              <div class="field">
+                <p class="control has-icons-left is-large">
+                  <input v-model="currentRepoFilter" v-on:keyup="filterRepos" class="input is-large full-width username-input" type="text" placeholder="Filter Repos">
+                  <span class="icon is-left">
+                    <font-awesome-icon class="" :icon="['fas', 'search']" />
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+
           <table class="table is-fullwidth is-hoverable is-narrow">
           <thead>
             <tr>
@@ -183,7 +197,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="repo in user.repos" :key="repo.id">
+            <tr v-for="repo in tableRepos" :key="repo.id">
               <td><strong>{{repo.name}}</strong></td>
               <td nowrap>
                 <a :href="repo.html_url" target="_blank">
@@ -202,8 +216,8 @@
               <td>{{repo.forks}}</td>
               <td>{{repo.open_issues}}</td>
               <td>{{repo.language}}</td>
-              <td>{{formatRepoDate(repo.created_at)}}</td>
-              <td>{{formatRepoDate(repo.updated_at)}}</td>
+              <td>{{formatDate(repo.created_at, 'MM/D/YYYY')}}</td>
+              <td>{{formatDate(repo.updated_at, 'MM/D/YYYY')}}</td>
             </tr>
           </tbody>
         </table>
@@ -236,28 +250,21 @@ export default {
   },
   data() {
     return {
-      currentUserInput: '',
       user: null,
       users: [],
       userNotFound: false,
       isLoading: false,
+      tableRepos: [],
+      currentUserInput: '',
+      currentRepoFilter: '',
     };
   },
   async mounted() {
-    // const user = await getGithubUser();
-    // this.user = user;
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('u')) {
       this.currentUserInput = urlParams.get('u');
       this.getUser();
     }
-  },
-  computed: {
-    joinDate() {
-      return this.user.created_at
-        ? moment(this.user.created_at).format('MMMM Do, YYYY')
-        : null;
-    },
   },
   methods: {
     async getUser() {
@@ -267,12 +274,17 @@ export default {
       if (user.error) {
         this.userNotFound = true;
       } else {
-        const repos = await getGithubUserRepos(user.repos_url);
-        const graphData = createGraphData(repos);
+        if (user.public_repos > 0) {
+          const repos = await getGithubUserRepos(user.repos_url);
+          const graphData = createGraphData(repos);
 
-        user.repos = repos;
-        user.graphData = graphData;
-        this.user = user;
+          user.repos = repos;
+          user.graphData = graphData;
+        } else {
+          user.repos = [];
+          user.graphData = {};
+        }
+        this.setCurrentUser(user);
 
         /**
        * Checking if this user already exists and then removing them to avoid duplicates.
@@ -287,13 +299,17 @@ export default {
     },
     changeCurrentUser(id) {
       const index = this.users.findIndex(user => user.id === id);
-      this.user = this.users[index];
+      this.setCurrentUser(this.users[index]);
     },
-    formatRepoDate(date) {
-      return moment(date).format('MM/D/YYYY');
+    setCurrentUser(user) {
+      this.user = user;
+      this.tableRepos = this.user.repos;
     },
-    hideErrorMessage() {
-      this.userNotFound = false;
+    formatDate(date, desiredFormat) {
+      return moment(date).format(desiredFormat);
+    },
+    filterRepos() {
+      this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(this.currentRepoFilter.toLowerCase()));
     },
   },
 };
