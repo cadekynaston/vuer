@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 // import lineGraphTemplate from './graphTemplates';
-import defaultColors from '../components/charts/config/colors';
+import defaultColors from '../shared/colors';
 
 const createNumberOfReposByYear = (repos) => {
   const cleanRepos = [...repos].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
