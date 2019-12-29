@@ -1,6 +1,6 @@
 <template>
-  <div class="container margin-bottom">
-    <div class="is-flex input-container">
+  <div class="container">
+    <div class="is-flex input-container margin-bottom">
       <div class="field has-addons">
         <p :class="isLoading ? 'is-loading' : ''" class="control has-icons-left is-large">
           <input v-model="currentUserInput" v-on:keyup.enter="getUser" class="input is-large full-width username-input" type="text" placeholder="Github Username" :disabled="isLoading">
