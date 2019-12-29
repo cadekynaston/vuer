@@ -2,33 +2,11 @@
   <section class="section">
     <h1 class="has-text-centered title is-size-2">GitHub Profile Viewer</h1>
 
-    <div class="container">
-      <div class="is-flex input-container">
-        <div class="field has-addons">
-          <p :class="isLoading ? 'is-loading' : ''" class="control has-icons-left is-large">
-            <input v-model="currentUserInput" v-on:keyup.enter="getUser" class="input is-large full-width username-input" type="text" placeholder="Github Username" :disabled="isLoading">
-            <span class="icon is-left">
-              <font-awesome-icon class="" :icon="['fas', 'user']" />
-            </span>
-          </p>
-          <p class="control">
-            <button @click="getUser" class="button is-large is-primary" :disabled="isLoading">
-              Search
-            </button>
-          </p>
-        </div>
-      </div>
-
-      <article v-if="userNotFound" class="message is-danger margin-bottom">
-        <div class="message-header">
-          <p>Error</p>
-          <button @click="userNotFound = false" class="delete" aria-label="delete"></button>
-        </div>
-        <div class="message-body">
-          A GitHub account with that username does not exist.
-        </div>
-      </article>
-    </div>
+      <ProfileSearch
+        :isLoading="isLoading"
+        :userNotFound="userNotFound"
+        @getUser="getUser"
+      />
 
     <div class="container">
       <div v-if="user" class="columns is-desktop">
@@ -151,16 +129,16 @@
           </div>
 
           <article class="message is-warning">
-          <div class="message-body">
-           <div class="content is-small">
-             <p class="is-marginless"><strong>NOTE:</strong></p>
-             <ul style="margin-top: 0">
-               <li>Datasets may be toggled by clicking on the key for each graph.</li>
-               <li>Forked repos have been ommitted from these results.</li>
-             </ul>
-           </div>
-          </div>
-        </article>
+            <div class="message-body">
+              <div class="content is-small">
+                <p class="is-marginless"><strong>NOTE:</strong></p>
+                <ul style="margin-top: 0">
+                  <li>Datasets may be toggled by clicking on the key for each graph.</li>
+                  <li>Forked repos have been ommitted from these results.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </div>
@@ -168,7 +146,6 @@
     <div class="container margin-top">
       <div v-if="user" class="box is-primary">
         <h2 class="title is-2">Repos</h2>
-
         <TableFilter @filterUpdated="filterRepos" />
         <div class="full-width overflow-scroll">
           <RepoTable :table-data="tableRepos" />
@@ -186,6 +163,7 @@ import Doughnut from './charts/Doughnut.vue';
 import Bar from './charts/Bar.vue';
 import RepoTable from './RepoTable.vue';
 import TableFilter from './TableFilter.vue';
+import ProfileSearch from './ProfileSearch.vue';
 
 import {
   getGithubUser, getGithubUserRepos, createGraphData,
@@ -201,11 +179,9 @@ export default {
     Bar,
     RepoTable,
     TableFilter,
+    ProfileSearch,
   },
   mixins: [formatDate],
-  props: {
-    msg: String,
-  },
   data() {
     return {
       user: null,
@@ -219,14 +195,13 @@ export default {
   async mounted() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('u')) {
-      this.currentUserInput = urlParams.get('u');
-      this.getUser();
+      this.getUser(urlParams.get('u'));
     }
   },
   methods: {
-    async getUser() {
+    async getUser(userInput) {
       this.isLoading = true;
-      const user = await getGithubUser(this.currentUserInput);
+      const user = await getGithubUser(userInput);
 
       if (user.error) {
         this.userNotFound = true;
@@ -268,11 +243,3 @@ export default {
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-  .input-container {
-    justify-content: center;
-    margin-bottom: 1.5rem;
-  }
-</style>
