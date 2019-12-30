@@ -6,6 +6,7 @@
         :isLoading="isLoading"
         :userNotFound="userNotFound"
         @getUser="getUser"
+        @userNotFoundClosed="updateUserNotFound"
       />
 
     <div class="container">
@@ -20,7 +21,7 @@
                 <li v-for="u in users" :key="u.id">
                   <a v-bind:class="u.id === user.id ? 'is-active' : ''" @click="changeCurrentUser(u.id)" class=" is-size-5 is-relative">
                     {{u.login}}
-                    <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: {{u.dataTimestamp}}</span>
+                    <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: {{formatDate(u.dataTimestamp, 'MMM Do @ H:MM')}}</span>
                     <!-- <button v-if="u.id === user.id" class="button is-small is-right absolute-right">Refresh</button> -->
                   </a>
                 </li>
@@ -42,7 +43,9 @@
 
               <div class="column">
                 <div class="user-info">
-                  <h2 class="title is-3">{{user.name}}</h2>
+                  <h2 v-if="user.name" class="title is-3">{{user.name}}</h2>
+                  <h2 v-else class="title is-3">{{user.login}}</h2>
+
 
                   <p v-if="user.bio" class="subtitle">{{user.bio}}</p>
 
@@ -57,7 +60,7 @@
                       </button>
                     </a>
 
-                    <a v-if="user.blog" target="_blank" :href="`${user.blog}`">
+                    <a v-if="user.blog" target="_blank" :href="userBlogURL">
                       <button class="button">
                         <span class="icon">
                           <font-awesome-icon class="icon is-medium" :icon="['fas', 'user-circle']" />
@@ -92,13 +95,28 @@
                     <div v-if="user.email" class="tag margin-right-10 margin-bottom-10">
                       <a :href="`mailto:${user.email}`">{{user.email}}</a>
                     </div>
-                    <div v-if="userCompanies">
-                      <div v-for="company in userCompanies" class="tag margin-right-10 margin-bottom-10" :key="company">
-                        <a :href="`https://github.com/${company.replace('@', '')}`" target="_blank">{{company}}</a>
-                      </div>
+                    <div v-for="company in userCompanies" class="tag margin-right-10 margin-bottom-10" :key="company">
+                      <a v-if="company.includes('@')" :href="`https://github.com/${company.replace('@', '')}`" class="is-flex align-items-center" target="_blank">
+                        <span class="icon" style="margin-right: 0">
+                          <font-awesome-icon class="icon" :icon="['fa', 'user-friends']" />
+                        </span>{{company}}</a>
+                      <div v-else class="is-flex align-items-center">
+                        <span class="icon" style="margin-right: 0">
+                          <font-awesome-icon class="icon" :icon="['fa', 'user-friends']" />
+                        </span>
+                      {{company}}</div>
                     </div>
-                    <div v-if="user.location" class="tag margin-right-10 margin-bottom-10">{{user.location}}</div>
-                    <div v-if="user.created_at" class="tag margin-right-10 margin-bottom-10">Joined: {{formatDate(user.created_at, 'MMMM Do, YYYY')}}</div>
+                    <div v-if="user.location" class="tag margin-right-10 margin-bottom-10">
+                      <span class="icon" style="margin-right: 0">
+                        <font-awesome-icon class="icon" :icon="['fa', 'map-marker-alt']" />
+                      </span>
+                      {{user.location}}</div>
+                    <div v-if="user.created_at" class="tag margin-right-10 margin-bottom-10">
+                      <span class="icon" style="margin-right: 0">
+                        <font-awesome-icon class="icon" :icon="['fa', 'calendar-plus']" />
+                      </span>
+                      {{formatDate(user.created_at, 'MMMM Do, YYYY')}}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -210,6 +228,7 @@ export default {
       if (user.error) {
         this.userNotFound = true;
       } else {
+        this.userNotFound = false;
         if (user.public_repos > 0) {
           const repos = await getGithubUserRepos(user.repos_url);
           const graphData = createGraphData(repos);
@@ -244,10 +263,27 @@ export default {
     filterRepos(filter) {
       this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase()));
     },
+    updateUserNotFound() {
+      this.userNotFound = false;
+    },
   },
   computed: {
     userCompanies() {
-      return this.user.company.split(' ');
+      if (this.user && this.user.company) {
+        return this.user.company.split(' ');
+      }
+      return [];
+    },
+    userBlogURL() {
+      if (this.user.blog) {
+        try {
+          const blogURL = new URL(this.user.blog);
+          return blogURL;
+        } catch {
+          return `https://${this.user.blog}`;
+        }
+      }
+      return null;
     },
   },
 };

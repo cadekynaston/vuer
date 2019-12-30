@@ -2,28 +2,47 @@
   <div class="container">
     <div class="is-flex input-container margin-bottom">
       <div class="field has-addons">
-        <p :class="isLoading ? 'is-loading' : ''" class="control has-icons-left is-large">
-          <input v-model="currentUserInput" v-on:keyup.enter="getUser" class="input is-large full-width username-input" type="text" placeholder="Github Username" :disabled="isLoading">
+        <p
+          :class="{'is-loading': isLoading}"
+          class="control has-icons-left is-large"
+        >
+          <input
+            v-model="currentUserInput"
+            @keyup.enter="getUser"
+            :disabled="isLoading"
+            class="input is-large full-width username-input"
+            type="text"
+            placeholder="Github Username"
+          />
           <span class="icon is-left">
             <font-awesome-icon :icon="['fas', 'user']" />
           </span>
         </p>
         <p class="control">
-          <button @click="getUser" class="button is-large is-primary" :disabled="isLoading">
+          <button
+            @click="getUser"
+            :disabled="isLoading"
+            class="button is-large is-primary"
+          >
             Search
           </button>
         </p>
       </div>
     </div>
 
-    <article v-if="userNotFound" class="message is-danger margin-bottom">
+    <article
+      v-if="userNotFound"
+      class="message is-danger margin-bottom"
+    >
       <div class="message-header">
         <p>Error</p>
-        <button @click="userNotFound = false" class="delete" aria-label="delete"></button>
+        <button
+          @click="updateUserFound"
+          class="delete"
+          aria-label="delete"
+        ></button>
       </div>
-      <div class="message-body">
-        A GitHub account with that username does not exist.
-      </div>
+      <div class="message-body">A GitHub account with that username does not exist.</div>
     </article>
   </div>
 </template>
@@ -49,6 +68,9 @@ export default {
   methods: {
     getUser() {
       this.$emit('getUser', this.currentUserInput);
+    },
+    updateUserFound() {
+      this.$emit('userNotFoundClosed');
     },
   },
 };

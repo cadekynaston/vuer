@@ -1,18 +1,71 @@
-import moment from 'moment';
+const pruneUserData = (data) => {
+  /* eslint-disable camelcase */
+  const {
+    login, id, node_id, avatar_url, url, html_url, repos_url, name, company, blog, location, email, bio, public_repos, followers, following, created_at, updated_at,
+  } = data;
+
+  return {
+    login,
+    id,
+    node_id,
+    avatar_url,
+    url,
+    html_url,
+    repos_url,
+    name,
+    company,
+    blog,
+    location,
+    email,
+    bio,
+    public_repos,
+    followers,
+    following,
+    created_at,
+    updated_at,
+    dataTimestamp: new Date(),
+  };
+};
+
+const pruneRepoData = (data) => {
+  /* eslint-disable camelcase */
+  const {
+    id, name, html_url, description, fork, url, languages_url, created_at, updated_at, homepage, size, stargazers_count, watchers_count, language, forks_count, open_issues_count, forks, open_issues,
+  } = data;
+
+  return {
+    id,
+    name,
+    html_url,
+    description,
+    fork,
+    url,
+    languages_url,
+    created_at,
+    updated_at,
+    homepage,
+    size,
+    stargazers_count,
+    watchers_count,
+    language,
+    forks_count,
+    open_issues_count,
+    forks,
+    open_issues,
+  };
+};
 
 export const getGithubUser = async (username) => {
   try {
     const response = await fetch(`https://api.github.com/users/${username}`);
     const json = await response.json();
-    const dataTimestamp = moment(new Date()).format('MMM Do @ H:MM');
-    const returnData = {
-      ...json,
-      dataTimestamp,
-    };
-    if (returnData.message === 'Not Found') {
-      returnData.error = 'Not found';
+
+    if (json.message === 'Not Found') {
+      json.error = 'Not found';
+      return json;
     }
-    return returnData;
+
+    return pruneUserData(json);
   } catch (error) {
     return error;
   }
@@ -49,6 +102,10 @@ export const getGithubUserRepos = async (url) => {
     ...json,
     ...remainingRepos,
   ];
-  const reposCleaned = allRepos.filter(repo => !repo.fork).sort((a, b) => b.stargazers_count - a.stargazers_count);
+  const reposCleaned = allRepos
+    .filter(repo => !repo.fork)
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .map(repo => pruneRepoData(repo));
+
   return reposCleaned;
 };
