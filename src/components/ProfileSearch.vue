@@ -12,7 +12,7 @@
             :disabled="isLoading"
             class="input is-large full-width username-input"
             type="text"
-            placeholder="Github Username"
+            placeholder="GitHub Username"
           />
           <span class="icon is-left">
             <font-awesome-icon :icon="['fas', 'user']" />
