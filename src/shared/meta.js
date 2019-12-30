@@ -3,10 +3,10 @@ const metaInfo = {
   title: 'Vuer | GitHub Profile Viewer',
   meta: [
     { name: 'description', content: 'Vuer is a GitHub profile viewing tool to easily get a feel for someones github account.' },
-    { name: 'og:title', content: 'Vuer | GitHub Profile Viewer' },
-    { name: 'og:description', content: 'Vuer is a GitHub profile viewing tool to easily get a feel for someones github account.' },
-    { name: 'og:type', content: 'website' },
-    { name: 'og:image', content: `${siteURL}/img/snapshot.png` },
+    { property: 'og:title', content: 'Vuer | GitHub Profile Viewer' },
+    { property: 'og:description', content: 'Vuer is a GitHub profile viewing tool to easily get a feel for someones github account.' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: `${siteURL}/img/snapshot.png` },
   ],
 };
 
