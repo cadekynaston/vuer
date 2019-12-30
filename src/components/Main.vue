@@ -6,6 +6,7 @@
         :isLoading="isLoading"
         :userNotFound="userNotFound"
         @getUser="getUser"
+        @userNotFoundClosed="updateUserNotFound"
       />
 
     <div class="container">
@@ -93,6 +94,7 @@
                       <a :href="`mailto:${user.email}`">{{user.email}}</a>
                     </div>
                     <div v-if="userCompanies">
+                      <!-- todo: dont create a link if no @ sign -->
                       <div v-for="company in userCompanies" class="tag margin-right-10 margin-bottom-10" :key="company">
                         <a :href="`https://github.com/${company.replace('@', '')}`" target="_blank">{{company}}</a>
                       </div>
@@ -210,6 +212,7 @@ export default {
       if (user.error) {
         this.userNotFound = true;
       } else {
+        this.userNotFound = false;
         if (user.public_repos > 0) {
           const repos = await getGithubUserRepos(user.repos_url);
           const graphData = createGraphData(repos);
@@ -243,6 +246,9 @@ export default {
     },
     filterRepos(filter) {
       this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase()));
+    },
+    updateUserNotFound() {
+      this.userNotFound = false;
     },
   },
   computed: {
