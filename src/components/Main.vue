@@ -92,9 +92,13 @@
                     <div v-if="user.email" class="tag margin-right-10 margin-bottom-10 is-light">
                       <a :href="`mailto:${user.email}`">{{user.email}}</a>
                     </div>
-                    <div v-if="user.company" class="tag margin-right-10 margin-bottom-10 is-info is-light">{{user.company}}</div>
-                    <div v-if="user.location" class="tag margin-right-10 margin-bottom-10 is-info is-light">{{user.location}}</div>
-                    <div v-if="user.created_at" class="tag margin-right-10 margin-bottom-10 is-info is-light">Joined: {{formatDate(user.created_at, 'MMMM Do, YYYY')}}</div>
+                    <div v-if="userCompanies">
+                      <div v-for="company in userCompanies" class="tag margin-right-10 margin-bottom-10 is-light" :key="company">
+                        <a :href="`https://github.com/${company.replace('@', '')}`" target="_blank">{{company}}</a>
+                      </div>
+                    </div>
+                    <div v-if="user.location" class="tag margin-right-10 margin-bottom-10 is-light">{{user.location}}</div>
+                    <div v-if="user.created_at" class="tag margin-right-10 margin-bottom-10 is-light">Joined: {{formatDate(user.created_at, 'MMMM Do, YYYY')}}</div>
                   </div>
                 </div>
               </div>
@@ -239,6 +243,11 @@ export default {
     },
     filterRepos(filter) {
       this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase()));
+    },
+  },
+  computed: {
+    userCompanies() {
+      return this.user.company.split(' ');
     },
   },
 };
