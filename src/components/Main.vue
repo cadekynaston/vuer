@@ -20,7 +20,7 @@
                 <li v-for="u in users" :key="u.id">
                   <a v-bind:class="u.id === user.id ? 'is-active' : ''" @click="changeCurrentUser(u.id)" class=" is-size-5 is-relative">
                     {{u.login}}
-                    <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: {{u.dataTimestamp}}</span>
+                    <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: {{formatDate(u.dataTimestamp, 'MMM Do @ H:MM')}}</span>
                     <!-- <button v-if="u.id === user.id" class="button is-small is-right absolute-right">Refresh</button> -->
                   </a>
                 </li>
@@ -247,7 +247,10 @@ export default {
   },
   computed: {
     userCompanies() {
-      return this.user.company.split(' ');
+      if (this.user && this.user.company) {
+        return this.user.company.split(' ');
+      }
+      return null;
     },
   },
 };
