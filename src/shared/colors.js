@@ -15,6 +15,12 @@ const defaultColors = [
   '#FF7F11',
   '#2F3061',
   '#4C5C68',
+  '#603140',
+  '#FCD0A1',
+  '#5E4B56',
+  '#EE7674',
+  '#A690A4',
+  '#AFD2E9',
 ];
 
 export default defaultColors;
