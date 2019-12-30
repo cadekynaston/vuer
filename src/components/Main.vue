@@ -60,7 +60,7 @@
                       </button>
                     </a>
 
-                    <a v-if="user.blog" target="_blank" :href="`${user.blog}`">
+                    <a v-if="user.blog" target="_blank" :href="userBlogURL">
                       <button class="button">
                         <span class="icon">
                           <font-awesome-icon class="icon is-medium" :icon="['fas', 'user-circle']" />
@@ -273,6 +273,17 @@ export default {
         return this.user.company.split(' ');
       }
       return [];
+    },
+    userBlogURL() {
+      if (this.user.blog) {
+        try {
+          const blogURL = new URL(this.user.blog);
+          return blogURL;
+        } catch {
+          return `https://${this.user.blog}`;
+        }
+      }
+      return null;
     },
   },
 };
