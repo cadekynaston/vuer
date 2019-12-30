@@ -95,7 +95,6 @@
                     <div v-if="user.email" class="tag margin-right-10 margin-bottom-10">
                       <a :href="`mailto:${user.email}`">{{user.email}}</a>
                     </div>
-                      <!-- todo: dont create a link if no @ sign -->
                     <div v-for="company in userCompanies" class="tag margin-right-10 margin-bottom-10" :key="company">
                       <a v-if="company.includes('@')" :href="`https://github.com/${company.replace('@', '')}`" class="is-flex align-items-center" target="_blank">
                         <span class="icon" style="margin-right: 0">
