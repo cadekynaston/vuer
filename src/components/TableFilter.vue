@@ -4,7 +4,7 @@
       <p class="control has-icons-left is-large">
         <input v-model="currentRepoFilter" v-on:keyup="filterRepos" class="input is-large full-width username-input" type="text" placeholder="Filter Repos">
         <span class="icon is-left">
-          <font-awesome-icon class="" :icon="['fas', 'search']" />
+          <font-awesome-icon :icon="['fas', 'search']" />
         </span>
       </p>
     </div>
