@@ -22,7 +22,7 @@
       <th nowrap>
         <p @click="sort('stargazers_count')" class="hover-pointer">
             Stars
-            <span class="icon fa-border" :class="sortSettings.column === 'stargazers_count' ? '' : ''">
+            <span class="icon fa-border" :class="sortSettings.column === 'stargazers_count' ? 'has-background-warning' : ''">
               <font-awesome-icon :icon="['fas', 'sort']" />
             </span>
         </p>
