@@ -9,7 +9,7 @@
 </h1>
 
 
-Vuer is a GitHub profile viewing tool. [Check it out!](https://vuew.now.sh?u=yyx990803)
+Vuer is a GitHub profile viewing tool. [Check it out!](https://vuer.now.sh?u=yyx990803)
 
 ## Project Details
 This was my first attempt at creating something using [Vue](https://vuejs.org/) and I found it to be very enjoyable. The docs are great and the syntax is pretty easy to pick up.
