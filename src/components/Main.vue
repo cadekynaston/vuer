@@ -36,7 +36,7 @@
 
               <div class="column is-3">
                 <figure class="image max-200">
-                  <img class="" :src="user.avatar_url" alt="">
+                  <img :src="user.avatar_url" alt="">
                 </figure>
               </div>
 
