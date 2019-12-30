@@ -5,7 +5,7 @@
         <p :class="isLoading ? 'is-loading' : ''" class="control has-icons-left is-large">
           <input v-model="currentUserInput" v-on:keyup.enter="getUser" class="input is-large full-width username-input" type="text" placeholder="Github Username" :disabled="isLoading">
           <span class="icon is-left">
-            <font-awesome-icon class="" :icon="['fas', 'user']" />
+            <font-awesome-icon :icon="['fas', 'user']" />
           </span>
         </p>
         <p class="control">
