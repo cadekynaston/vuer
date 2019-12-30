@@ -270,7 +270,7 @@ export default {
   computed: {
     userCompanies() {
       if (this.user && this.user.company) {
-        return this.user.company.split(' ');
+        return this.user.company.trim().split(' ');
       }
       return [];
     },
