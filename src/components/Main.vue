@@ -43,7 +43,9 @@
 
               <div class="column">
                 <div class="user-info">
-                  <h2 class="title is-3">{{user.name}}</h2>
+                  <h2 v-if="user.name" class="title is-3">{{user.name}}</h2>
+                  <h2 v-else class="title is-3">{{user.login}}</h2>
+
 
                   <p v-if="user.bio" class="subtitle">{{user.bio}}</p>
 
@@ -93,14 +95,29 @@
                     <div v-if="user.email" class="tag margin-right-10 margin-bottom-10">
                       <a :href="`mailto:${user.email}`">{{user.email}}</a>
                     </div>
-                    <div v-if="userCompanies">
                       <!-- todo: dont create a link if no @ sign -->
-                      <div v-for="company in userCompanies" class="tag margin-right-10 margin-bottom-10" :key="company">
-                        <a :href="`https://github.com/${company.replace('@', '')}`" target="_blank">{{company}}</a>
-                      </div>
+                    <div v-for="company in userCompanies" class="tag margin-right-10 margin-bottom-10" :key="company">
+                      <a v-if="company.includes('@')" :href="`https://github.com/${company.replace('@', '')}`" class="is-flex align-items-center" target="_blank">
+                        <span class="icon" style="margin-right: 0">
+                          <font-awesome-icon class="icon" :icon="['fa', 'user-friends']" />
+                        </span>{{company}}</a>
+                      <div v-else class="is-flex align-items-center">
+                        <span class="icon" style="margin-right: 0">
+                          <font-awesome-icon class="icon" :icon="['fa', 'user-friends']" />
+                        </span>
+                      {{company}}</div>
                     </div>
-                    <div v-if="user.location" class="tag margin-right-10 margin-bottom-10">{{user.location}}</div>
-                    <div v-if="user.created_at" class="tag margin-right-10 margin-bottom-10">Joined: {{formatDate(user.created_at, 'MMMM Do, YYYY')}}</div>
+                    <div v-if="user.location" class="tag margin-right-10 margin-bottom-10">
+                      <span class="icon" style="margin-right: 0">
+                        <font-awesome-icon class="icon" :icon="['fa', 'map-marker-alt']" />
+                      </span>
+                      {{user.location}}</div>
+                    <div v-if="user.created_at" class="tag margin-right-10 margin-bottom-10">
+                      <span class="icon" style="margin-right: 0">
+                        <font-awesome-icon class="icon" :icon="['fa', 'calendar-plus']" />
+                      </span>
+                      {{formatDate(user.created_at, 'MMMM Do, YYYY')}}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -256,7 +273,7 @@ export default {
       if (this.user && this.user.company) {
         return this.user.company.split(' ');
       }
-      return null;
+      return [];
     },
   },
 };
