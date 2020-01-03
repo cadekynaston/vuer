@@ -158,7 +158,7 @@
                   <p class="is-marginless"><strong>NOTE:</strong></p>
                   <ul style="margin-top: 0">
                     <li>Datasets may be toggled by clicking on the key for each graph.</li>
-                    <li>Forked repos have been ommitted from these results.</li>
+                    <li>Forked and private repos have been omitted from these results.</li>
                   </ul>
                 </div>
               </div>
