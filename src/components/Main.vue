@@ -15,8 +15,10 @@
           <div class="column is-one-third-desktop">
             <div class="box is-fullheight">
 
-              <h5 class="title is-5">Profiles</h5>
               <div class="menu">
+                <p class="menu-label">
+                  Profiles
+                </p>
                 <ul class="menu-list overflow-scroll max-height-200">
                   <li v-for="u in users" :key="u.id">
                     <a v-bind:class="u.id === user.id ? 'is-active' : ''" @click="changeCurrentUser(u.id)" class=" is-size-5 is-relative">
@@ -156,7 +158,7 @@
                   <p class="is-marginless"><strong>NOTE:</strong></p>
                   <ul style="margin-top: 0">
                     <li>Datasets may be toggled by clicking on the key for each graph.</li>
-                    <li>Forked repos have been ommitted from these results.</li>
+                    <li>Forked and private repos have been omitted from these results.</li>
                   </ul>
                 </div>
               </div>
@@ -177,7 +179,8 @@
     </div>
 
     <div class="footer margin-top has-background-white">
-      <p class="has-text-centered">Created by <a href="https://cade.codes">Cade Kynaston</a> using <a href="https://vuejs.org/">Vue</a> + <a href="https://bulma.io/">Bulma</a> + <a href="https://www.chartjs.org/">Charts.js</a></p>
+      <p class="has-text-centered">Created by <a href="https://cade.codes" target="_blank">Cade Kynaston</a> using <a href="https://vuejs.org/" target="_blank">Vue</a> + <a href="https://www.chartjs.org/" target="_blank">Charts.js</a> + <a href="https://bulma.io/" target="_blank">Bulma</a>.<br class="is-hidden-desktop"/> Check out the code <a href="https://github.com/cadekynaston/vuer" target="_blank">here</a>.</p>
+
     </div>
   </section>
 </template>
@@ -263,6 +266,8 @@ export default {
     setCurrentUser(user) {
       this.user = user;
       this.tableRepos = this.user.repos;
+      // /* eslint-disable no-restricted-globals */
+      // history.pushState(null, null, `u=${this.user.login}`);
     },
     filterRepos(filter) {
       this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase()));

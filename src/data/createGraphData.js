@@ -11,6 +11,7 @@ const createNumberOfReposByYear = (repos) => {
     {
       date: new Date(datePlaceholder),
       numberOfRepos: 0,
+      sizeOfRepos: 0,
     },
   ];
 
@@ -20,23 +21,31 @@ const createNumberOfReposByYear = (repos) => {
   }
   reposByDate.sort((a, b) => a.date - b.date);
 
+  let totalSize = 0;
   cleanRepos.forEach((repo, i) => {
     const nextIndex = reposByDate.findIndex(r => new Date(repo.created_at) < r.date);
+    totalSize += repo.size / 1000;
+
     reposByDate[nextIndex].numberOfRepos = i + 1;
+    reposByDate[nextIndex].sizeOfRepos = totalSize.toFixed(2);
   });
 
   let numberOfRepos = 0;
+  let sizeOfRepos = 0;
   reposByDate.map((repo) => {
     const tempRepo = repo;
     if (tempRepo.numberOfRepos === 0) {
       tempRepo.numberOfRepos = numberOfRepos;
+      tempRepo.sizeOfRepos = sizeOfRepos;
     }
-    ({ numberOfRepos } = tempRepo);
+    ({ numberOfRepos, sizeOfRepos } = tempRepo);
     return repo;
   });
 
+
   return reposByDate.reduce((all, current) => {
     all.datasets[0].data.push(current.numberOfRepos);
+    all.datasets[1].data.push(current.sizeOfRepos);
     all.labels.push(moment(current.date).format('MMM YYYY'));
     return all;
   }, {
@@ -48,51 +57,6 @@ const createNumberOfReposByYear = (repos) => {
         fill: false,
         data: [],
       },
-    ],
-  });
-};
-
-const createTotalSizeOfReposByYear = (repos) => {
-  const cleanRepos = [...repos].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-
-  let datePlaceholder = moment();
-  const earliestRepoDate = new Date(cleanRepos[0].created_at);
-  const reposByDate = [
-    {
-      date: new Date(datePlaceholder),
-      sizeOfRepos: 0,
-    },
-  ];
-
-  while (datePlaceholder > earliestRepoDate) {
-    datePlaceholder = new Date(moment(datePlaceholder).subtract((2), 'months'));
-    reposByDate.push({ date: datePlaceholder, sizeOfRepos: 0 });
-  }
-  reposByDate.sort((a, b) => a.date - b.date);
-  let test = 0;
-  cleanRepos.forEach((repo) => {
-    const nextIndex = reposByDate.findIndex(r => new Date(repo.created_at) < r.date);
-    test += repo.size / 1000;
-    reposByDate[nextIndex].sizeOfRepos = test.toFixed(2);
-  });
-
-  let sizeOfRepos = 0;
-  reposByDate.map((repo) => {
-    const tempRepo = repo;
-    if (tempRepo.sizeOfRepos === 0) {
-      tempRepo.sizeOfRepos = sizeOfRepos;
-    }
-    ({ sizeOfRepos } = tempRepo);
-    return repo;
-  });
-
-  return reposByDate.reduce((all, current) => {
-    all.datasets[0].data.push(current.sizeOfRepos);
-    all.labels.push(moment(current.date).format('MMM YYYY'));
-    return all;
-  }, {
-    labels: [],
-    datasets: [
       {
         label: 'Total size of repos (in MB)',
         borderColor: '#48C774',
@@ -164,15 +128,11 @@ const createTopReposByStars = (repos) => {
 
 const createGraphData = (repos) => {
   const numberOfReposByYear = createNumberOfReposByYear(repos);
-  const totalSizeOfReposByYear = createTotalSizeOfReposByYear(repos);
   const languageTypes = createLanguageTypes(repos);
   const topReposByStars = createTopReposByStars(repos);
 
-  numberOfReposByYear.datasets.push(...totalSizeOfReposByYear.datasets);
-
   return {
     numberOfReposByYear,
-    totalSizeOfReposByYear,
     languageTypes,
     topReposByStars,
   };
