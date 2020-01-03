@@ -3,7 +3,11 @@
   <thead>
     <tr>
       <th nowrap>
-        <p @click="sort('name')" class="hover-pointer">
+        <p
+          @click="sort('name')"
+          class="hover-pointer"
+          data-tracking="table-header-name"
+        >
           Name
           <span class="icon fa-border" :class="sortSettings.column === 'name' ? 'has-background-warning' : ''">
             <font-awesome-icon :icon="['fas', 'sort']" />
@@ -12,7 +16,11 @@
       </th>
       <th>Links</th>
       <th nowrap>
-        <p @click="sort('size')" class="hover-pointer">
+        <p
+          @click="sort('size')"
+          class="hover-pointer"
+          data-tracking="table-header-size"
+        >
           Size (KB)
           <span class="icon fa-border" :class="sortSettings.column === 'size' ? 'has-background-warning' : ''">
             <font-awesome-icon :icon="['fas', 'sort']" />
@@ -20,7 +28,11 @@
         </p>
       </th>
       <th nowrap>
-        <p @click="sort('stargazers_count')" class="hover-pointer">
+        <p
+          @click="sort('stargazers_count')"
+          class="hover-pointer"
+          data-tracking="table-header-stars"
+        >
             Stars
             <span class="icon fa-border" :class="sortSettings.column === 'stargazers_count' ? 'has-background-warning' : ''">
               <font-awesome-icon :icon="['fas', 'sort']" />
@@ -28,7 +40,11 @@
         </p>
       </th>
       <th nowrap>
-        <p @click="sort('forks')" class="hover-pointer">
+        <p
+          @click="sort('forks')"
+          class="hover-pointer"
+          data-tracking="table-header-forks"
+        >
             Forks
             <span class="icon fa-border" :class="sortSettings.column === 'forks' ? 'has-background-warning' : ''">
               <font-awesome-icon :icon="['fas', 'sort']" />
@@ -36,7 +52,11 @@
         </p>
       </th>
       <th nowrap>
-        <p @click="sort('open_issues')" class="hover-pointer">
+        <p
+          @click="sort('open_issues')"
+          class="hover-pointer"
+          data-tracking="table-header-issues"
+        >
             Issues
             <span class="icon fa-border" :class="sortSettings.column === 'open_issues' ? 'has-background-warning' : ''">
               <font-awesome-icon :icon="['fas', 'sort']" />
@@ -44,7 +64,11 @@
         </p>
       </th>
       <th nowrap>
-        <p @click="sort('language')" class="hover-pointer">
+        <p
+          @click="sort('language')"
+          class="hover-pointer"
+          data-tracking="table-header-language"
+        >
             language
             <span class="icon fa-border" :class="sortSettings.column === 'language' ? 'has-background-warning' : ''">
               <font-awesome-icon :icon="['fas', 'sort']" />
@@ -52,7 +76,11 @@
         </p>
       </th>
       <th nowrap>
-        <p @click="sort('created_at')" class="hover-pointer">
+        <p
+          @click="sort('created_at')"
+          class="hover-pointer"
+          data-tracking="table-header-created"
+        >
             Created
             <span class="icon fa-border" :class="sortSettings.column === 'created_at' ? 'has-background-warning' : ''">
               <font-awesome-icon :icon="['fas', 'sort']" />
@@ -60,7 +88,11 @@
         </p>
       </th>
       <th nowrap>
-        <p @click="sort('updated_at')" class="hover-pointer">
+        <p
+          @click="sort('updated_at')"
+          class="hover-pointer"
+          data-tracking="table-header-updated"
+        >
             Updated
             <span class="icon fa-border" :class="sortSettings.column === 'updated_at' ? 'has-background-warning' : ''">
               <font-awesome-icon :icon="['fas', 'sort']" />
@@ -73,12 +105,21 @@
     <tr v-for="repo in localTableData" :key="repo.id">
       <td :class="{'has-background-light': sortSettings.column === 'name'}"><strong>{{repo.name}}</strong></td>
       <td nowrap>
-        <a :href="repo.html_url" target="_blank">
+        <a
+          :href="repo.html_url"
+          target="_blank"
+          data-tracking="table-repo-github-link"
+        >
           <span class="icon">
             <font-awesome-icon :icon="['fab', 'github']" />
           </span>
         </a>
-        <a v-if="repo.homepage !== null && repo.homepage !== ''" :href="repo.homepage"  target="_blank">
+        <a
+          v-if="repo.homepage !== null && repo.homepage !== ''"
+          :href="repo.homepage"
+          target="_blank"
+          data-tracking="table-repo-homepage-link"
+        >
           <span class="icon">
             <font-awesome-icon :icon="['fas', 'external-link-alt']" />
           </span>
