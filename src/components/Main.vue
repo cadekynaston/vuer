@@ -1,6 +1,6 @@
 <template>
   <section class="section min-height-100 is-flex flex-column space-between padding-bottom-0 ">
-    <div class="" >
+    <div>
       <h1 class="has-text-centered title is-size-2">GitHub Profile Viewer</h1>
       <ProfileSearch
         :isLoading="isLoading"
@@ -20,10 +20,23 @@
                   Profiles
                 </p>
                 <ul class="menu-list overflow-scroll max-height-200">
-                  <li v-for="u in users" :key="u.id">
-                    <a v-bind:class="u.id === user.id ? 'is-active' : ''" @click="changeCurrentUser(u.id)" class=" is-size-5 is-relative">
+                  <li
+                    v-for="u in users"
+                    :key="u.id"
+                  >
+                    <a
+                      v-bind:class="{'is-active': u.id === user.id}"
+                      @click="changeCurrentUser(u.id)"
+                      class=" is-size-5 is-relative"
+                      data-tracking="profile-user"
+                    >
                       {{u.login}}
-                      <span v-if="u.id === user.id" class="is-size-7"><br />last pulled: {{formatDate(u.dataTimestamp, 'MMM Do @ H:MM')}}</span>
+                      <span
+                        v-if="u.id === user.id"
+                        class="is-size-7"
+                      >
+                        <br />last pulled: {{formatDate(u.dataTimestamp, 'MMM Do @ H:MM')}}
+                      </span>
                       <!-- <button v-if="u.id === user.id" class="button is-small is-right absolute-right">Refresh</button> -->
                     </a>
                   </li>
@@ -39,7 +52,10 @@
 
                 <div class="column is-3">
                   <figure class="image max-200">
-                    <img :src="user.avatar_url" alt="">
+                    <img
+                      :src="user.avatar_url"
+                      :alt="`${user.login}'s avatar`"
+                    >
                   </figure>
                 </div>
 
@@ -47,13 +63,16 @@
                   <div class="user-info">
                     <h2 v-if="user.name" class="title is-3">{{user.name}}</h2>
                     <h2 v-else class="title is-3">{{user.login}}</h2>
-
-
                     <p v-if="user.bio" class="subtitle">{{user.bio}}</p>
 
                     <div class="user-links margin-bottom-30">
 
-                      <a :href="user.html_url" class="margin-right-10" target="_blank">
+                      <a
+                        :href="user.html_url"
+                        class="margin-right-10"
+                        target="_blank"
+                        data-tracking="user-github-account-link"
+                      >
                         <button class="button margin-bottom-10">
                           <span class="icon">
                             <font-awesome-icon class="icon is-medium" :icon="['fab', 'github']" />
@@ -62,10 +81,18 @@
                         </button>
                       </a>
 
-                      <a v-if="user.blog" target="_blank" :href="userBlogURL">
+                      <a
+                        v-if="user.blog"
+                        target="_blank"
+                        :href="userBlogURL"
+                        data-tracking="user-personal-site-link"
+                        >
                         <button class="button">
                           <span class="icon">
-                            <font-awesome-icon class="icon is-medium" :icon="['fas', 'user-circle']" />
+                            <font-awesome-icon
+                              class="icon is-medium"
+                              :icon="['fas', 'user-circle']"
+                            />
                           </span>
                           <span>Personal</span>
                         </button>
@@ -95,27 +122,55 @@
                     </div>
                     <div class="is-flex flex-wrap">
                       <div v-if="user.email" class="tag margin-right-10 margin-bottom-10">
-                        <a :href="`mailto:${user.email}`">{{user.email}}</a>
+                        <a
+                          :href="`mailto:${user.email}`"
+                          data-tracking="email-tag"
+                        >{{user.email}}</a>
                       </div>
-                      <div v-for="company in userCompanies" class="tag margin-right-10 margin-bottom-10" :key="company">
-                        <a v-if="company.includes('@')" :href="`https://github.com/${company.replace('@', '')}`" class="is-flex align-items-center" target="_blank">
+                      <div
+                        v-for="company in userCompanies"
+                        class="tag margin-right-10 margin-bottom-10"
+                        :key="company"
+                      >
+                        <a
+                          v-if="company.includes('@')"
+                          :href="`https://github.com/${company.replace('@', '')}`"
+                          class="is-flex align-items-center"
+                          target="_blank"
+                          data-tracking="company-tag"
+                        >
                           <span class="icon" style="margin-right: 0">
-                            <font-awesome-icon class="icon" :icon="['fa', 'user-friends']" />
-                          </span>{{company}}</a>
+                            <font-awesome-icon
+                              class="icon"
+                              :icon="['fa', 'user-friends']"
+                            />
+                          </span>
+                          {{company}}
+                        </a>
                         <div v-else class="is-flex align-items-center">
                           <span class="icon" style="margin-right: 0">
-                            <font-awesome-icon class="icon" :icon="['fa', 'user-friends']" />
+                            <font-awesome-icon
+                              class="icon"
+                              :icon="['fa', 'user-friends']"
+                            />
                           </span>
-                        {{company}}</div>
+                          {{company}}
+                        </div>
                       </div>
                       <div v-if="user.location" class="tag margin-right-10 margin-bottom-10">
                         <span class="icon" style="margin-right: 0">
-                          <font-awesome-icon class="icon" :icon="['fa', 'map-marker-alt']" />
+                          <font-awesome-icon
+                            class="icon"
+                            :icon="['fa', 'map-marker-alt']"
+                          />
                         </span>
                         {{user.location}}</div>
                       <div v-if="user.created_at" class="tag margin-right-10 margin-bottom-10">
                         <span class="icon" style="margin-right: 0">
-                          <font-awesome-icon class="icon" :icon="['fa', 'calendar-plus']" />
+                          <font-awesome-icon
+                            class="icon"
+                            :icon="['fa', 'calendar-plus']"
+                          />
                         </span>
                         {{formatDate(user.created_at, 'MMMM Do, YYYY')}}
                       </div>
@@ -135,19 +190,37 @@
           <div v-if="user.graphData">
             <div class="columns is-desktop">
 
-              <div class="column has-text-centered is-one-third-desktop">
+              <div
+                class="column has-text-centered is-one-third-desktop"
+                data-tracking="repos-over-time-graph"
+              >
                 <p class="is-size-5"><strong>Repos Over Time</strong></p>
-                <LineChart class="chart" :chartData="user.graphData.numberOfReposByYear" />
+                <LineChart
+                  class="chart"
+                  :chartData="user.graphData.numberOfReposByYear"
+                />
               </div>
 
-              <div class="column has-text-centered is-one-third-desktop">
+              <div
+                class="column has-text-centered is-one-third-desktop"
+                data-tracking="popular-repos-graph"
+              >
                 <p class="is-size-5"><strong>Popular Repos</strong></p>
-                <Bar class="chart" :chartData="user.graphData.topReposByStars" />
+                <Bar
+                  class="chart"
+                  :chartData="user.graphData.topReposByStars"
+                />
               </div>
 
-              <div class="column has-text-centered is-one-third-desktop">
+              <div
+                class="column has-text-centered is-one-third-desktop"
+                data-tracking="languages-graph"
+              >
                 <p class="is-size-5"><strong>Languages</strong></p>
-                <Doughnut class="chart" :chartData="user.graphData.languageTypes" />
+                <Doughnut
+                  class="chart"
+                  :chartData="user.graphData.languageTypes"
+                />
               </div>
 
             </div>
@@ -179,7 +252,7 @@
     </div>
 
     <div class="footer margin-top has-background-white">
-      <p class="has-text-centered">Created by <a href="https://cade.codes" target="_blank">Cade Kynaston</a> using <a href="https://vuejs.org/" target="_blank">Vue</a> + <a href="https://www.chartjs.org/" target="_blank">Charts.js</a> + <a href="https://bulma.io/" target="_blank">Bulma</a>.<br class="is-hidden-desktop"/> Check out the code <a href="https://github.com/cadekynaston/vuer" target="_blank">here</a>.</p>
+      <p class="has-text-centered">Created by <a href="https://cade.codes" target="_blank" data-tracking="footer-personal-link">Cade Kynaston</a> using <a href="https://vuejs.org/" target="_blank" data-tracking="footer-vue-link">Vue</a> + <a href="https://www.chartjs.org/" target="_blank" data-tracking="footer-charts-link">Charts.js</a> + <a href="https://bulma.io/" target="_blank" data-tracking="footer-bulma-link">Bulma</a>.<br class="is-hidden-desktop"/> Check out the code <a href="https://github.com/cadekynaston/vuer" target="_blank" data-tracking="footer-view-code-link">here</a>.</p>
 
     </div>
   </section>

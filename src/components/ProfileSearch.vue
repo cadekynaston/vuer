@@ -13,6 +13,7 @@
             class="input is-large full-width username-input"
             type="text"
             placeholder="GitHub Username"
+            data-tracking="github-username-input"
           />
           <span class="icon is-left">
             <font-awesome-icon :icon="['fas', 'user']" />
@@ -23,6 +24,7 @@
             @click="getUser"
             :disabled="isLoading"
             class="button is-large is-primary"
+            data-tracking="github-username-search-button"
           >
             Search
           </button>
@@ -40,6 +42,7 @@
           @click="updateUserFound"
           class="delete"
           aria-label="delete"
+          data-tracking="user-not-found-close-button"
         ></button>
       </div>
       <div class="message-body">A GitHub account with that username does not exist.</div>
