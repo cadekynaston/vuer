@@ -19,7 +19,7 @@
                 <p class="menu-label">
                   Profiles
                 </p>
-                <ul class="menu-list overflow-scroll max-height-200">
+                <ul class="menu-list overflow-auto max-height-200">
                   <li
                     v-for="u in users"
                     :key="u.id"
@@ -244,7 +244,7 @@
         <div v-if="user" class="box is-primary">
           <h2 class="title is-2">Repos</h2>
           <TableFilter @filterUpdated="filterRepos" />
-          <div class="full-width overflow-scroll">
+          <div class="full-width overflow-auto">
             <RepoTable :table-data="tableRepos" />
           </div>
         </div>
