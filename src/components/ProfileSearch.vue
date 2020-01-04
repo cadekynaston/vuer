@@ -8,12 +8,12 @@
         >
           <input
             v-model="currentUserInput"
-            @keyup.enter="getUser"
+            @keyup.enter="getUserKeyPress"
             :disabled="isLoading"
             class="input is-large full-width username-input"
             type="text"
             placeholder="GitHub Username"
-            data-tracking="github-username-input"
+            data-tracking="search-input"
           />
           <span class="icon is-left">
             <font-awesome-icon :icon="['fas', 'user']" />
@@ -24,7 +24,7 @@
             @click="getUser"
             :disabled="isLoading"
             class="button is-large is-primary"
-            data-tracking="github-username-search-button"
+            data-tracking="search-button"
           >
             Search
           </button>
@@ -42,7 +42,7 @@
           @click="updateUserFound"
           class="delete"
           aria-label="delete"
-          data-tracking="user-not-found-close-button"
+          data-tracking="search-notfound"
         ></button>
       </div>
       <div class="message-body">A GitHub account with that username does not exist.</div>
@@ -69,6 +69,13 @@ export default {
     };
   },
   methods: {
+    getUserKeyPress() {
+      window.dataLayer.push({
+        event: 'userSearchEnter',
+        customSearchInput: this.currentUserInput,
+      });
+      this.$emit('getUser', this.currentUserInput);
+    },
     getUser() {
       this.$emit('getUser', this.currentUserInput);
     },

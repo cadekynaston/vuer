@@ -71,9 +71,8 @@
                         :href="user.html_url"
                         class="margin-right-10"
                         target="_blank"
-                        data-tracking="user-github-account-link"
                       >
-                        <button class="button margin-bottom-10">
+                        <button class="button margin-bottom-10" data-tracking="user-button">
                           <span class="icon">
                             <font-awesome-icon class="icon is-medium" :icon="['fab', 'github']" />
                           </span>
@@ -85,9 +84,11 @@
                         v-if="user.blog"
                         target="_blank"
                         :href="userBlogURL"
-                        data-tracking="user-personal-site-link"
                         >
-                        <button class="button">
+                        <button
+                          class="button"
+                          data-tracking="user-button"
+                        >
                           <span class="icon">
                             <font-awesome-icon
                               class="icon is-medium"
@@ -124,7 +125,7 @@
                       <div v-if="user.email" class="tag margin-right-10 margin-bottom-10">
                         <a
                           :href="`mailto:${user.email}`"
-                          data-tracking="email-tag"
+                          data-tracking="user-tag"
                         >{{user.email}}</a>
                       </div>
                       <div
@@ -137,7 +138,7 @@
                           :href="`https://github.com/${company.replace('@', '')}`"
                           class="is-flex align-items-center"
                           target="_blank"
-                          data-tracking="company-tag"
+                          data-tracking="user-tag"
                         >
                           <span class="icon" style="margin-right: 0">
                             <font-awesome-icon
@@ -192,7 +193,7 @@
 
               <div
                 class="column has-text-centered is-one-third-desktop"
-                data-tracking="repos-over-time-graph"
+                data-tracking="graph-time"
               >
                 <p class="is-size-5"><strong>Repos Over Time</strong></p>
                 <LineChart
@@ -203,7 +204,7 @@
 
               <div
                 class="column has-text-centered is-one-third-desktop"
-                data-tracking="popular-repos-graph"
+                data-tracking="graph-popular"
               >
                 <p class="is-size-5"><strong>Popular Repos</strong></p>
                 <Bar
@@ -214,7 +215,7 @@
 
               <div
                 class="column has-text-centered is-one-third-desktop"
-                data-tracking="languages-graph"
+                data-tracking="graph-languages"
               >
                 <p class="is-size-5"><strong>Languages</strong></p>
                 <Doughnut
@@ -252,7 +253,7 @@
     </div>
 
     <div class="footer margin-top has-background-white">
-      <p class="has-text-centered">Created by <a href="https://cade.codes" target="_blank" data-tracking="footer-personal-link">Cade Kynaston</a> using <a href="https://vuejs.org/" target="_blank" data-tracking="footer-vue-link">Vue</a> + <a href="https://www.chartjs.org/" target="_blank" data-tracking="footer-charts-link">Charts.js</a> + <a href="https://bulma.io/" target="_blank" data-tracking="footer-bulma-link">Bulma</a>.<br class="is-hidden-desktop"/> Check out the code <a href="https://github.com/cadekynaston/vuer" target="_blank" data-tracking="footer-view-code-link">here</a>.</p>
+      <p class="has-text-centered">Created by <a href="https://cade.codes" target="_blank" data-tracking="footer-link">Cade Kynaston</a> using <a href="https://vuejs.org/" target="_blank" data-tracking="footer-link">Vue</a> + <a href="https://www.chartjs.org/" target="_blank" data-tracking="footer-link">Charts.js</a> + <a href="https://bulma.io/" target="_blank" data-tracking="footer-link">Bulma</a>.<br class="is-hidden-desktop"/> Check out the code <a href="https://github.com/cadekynaston/vuer" target="_blank" data-tracking="footer-link">here</a>.</p>
 
     </div>
   </section>
@@ -291,7 +292,6 @@ export default {
       userNotFound: false,
       isLoading: false,
       tableRepos: [],
-      currentUserInput: '',
     };
   },
   async mounted() {
@@ -303,8 +303,8 @@ export default {
   methods: {
     async getUser(userInput) {
       this.isLoading = true;
-      const user = await getGithubUser(userInput);
 
+      const user = await getGithubUser(userInput);
       if (user.error) {
         this.userNotFound = true;
       } else {
