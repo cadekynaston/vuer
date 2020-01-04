@@ -6,7 +6,7 @@
         <p
           @click="sort('name')"
           class="hover-pointer"
-          data-tracking="table-header-name"
+          data-tracking="table-header"
         >
           Name
           <span class="icon fa-border" :class="sortSettings.column === 'name' ? 'has-background-warning' : ''">
@@ -19,7 +19,7 @@
         <p
           @click="sort('size')"
           class="hover-pointer"
-          data-tracking="table-header-size"
+          data-tracking="table-header"
         >
           Size (KB)
           <span class="icon fa-border" :class="sortSettings.column === 'size' ? 'has-background-warning' : ''">
@@ -31,7 +31,7 @@
         <p
           @click="sort('stargazers_count')"
           class="hover-pointer"
-          data-tracking="table-header-stars"
+          data-tracking="table-header"
         >
             Stars
             <span class="icon fa-border" :class="sortSettings.column === 'stargazers_count' ? 'has-background-warning' : ''">
@@ -43,7 +43,7 @@
         <p
           @click="sort('forks')"
           class="hover-pointer"
-          data-tracking="table-header-forks"
+          data-tracking="table-header"
         >
             Forks
             <span class="icon fa-border" :class="sortSettings.column === 'forks' ? 'has-background-warning' : ''">
@@ -55,7 +55,7 @@
         <p
           @click="sort('open_issues')"
           class="hover-pointer"
-          data-tracking="table-header-issues"
+          data-tracking="table-header"
         >
             Issues
             <span class="icon fa-border" :class="sortSettings.column === 'open_issues' ? 'has-background-warning' : ''">
@@ -67,7 +67,7 @@
         <p
           @click="sort('language')"
           class="hover-pointer"
-          data-tracking="table-header-language"
+          data-tracking="table-header"
         >
             language
             <span class="icon fa-border" :class="sortSettings.column === 'language' ? 'has-background-warning' : ''">
@@ -79,7 +79,7 @@
         <p
           @click="sort('created_at')"
           class="hover-pointer"
-          data-tracking="table-header-created"
+          data-tracking="table-header"
         >
             Created
             <span class="icon fa-border" :class="sortSettings.column === 'created_at' ? 'has-background-warning' : ''">
@@ -91,7 +91,7 @@
         <p
           @click="sort('updated_at')"
           class="hover-pointer"
-          data-tracking="table-header-updated"
+          data-tracking="table-header"
         >
             Updated
             <span class="icon fa-border" :class="sortSettings.column === 'updated_at' ? 'has-background-warning' : ''">
@@ -108,7 +108,7 @@
         <a
           :href="repo.html_url"
           target="_blank"
-          data-tracking="table-repo-github-link"
+          data-tracking="table-link"
         >
           <span class="icon">
             <font-awesome-icon :icon="['fab', 'github']" />
@@ -118,7 +118,7 @@
           v-if="repo.homepage !== null && repo.homepage !== ''"
           :href="repo.homepage"
           target="_blank"
-          data-tracking="table-repo-homepage-link"
+          data-tracking="table-link"
         >
           <span class="icon">
             <font-awesome-icon :icon="['fas', 'external-link-alt']" />

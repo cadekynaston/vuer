@@ -8,7 +8,7 @@
           class="input is-large full-width username-input"
           type="text"
           placeholder="Filter Repos"
-          data-tracking="repo-filter-input"
+          data-tracking="table-filter"
         >
         <span class="icon is-left">
           <font-awesome-icon :icon="['fas', 'search']" />
