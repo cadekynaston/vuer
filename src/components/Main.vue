@@ -309,15 +309,17 @@ export default {
         this.userNotFound = true;
       } else {
         this.userNotFound = false;
+        user.repos = [];
+        user.graphData = {};
+
         if (user.public_repos > 0) {
           const repos = await getGithubUserRepos(user.repos_url);
-          const graphData = createGraphData(repos);
+          if (repos.length > 0) {
+            const graphData = createGraphData(repos);
+            user.graphData = graphData;
+          }
 
           user.repos = repos;
-          user.graphData = graphData;
-        } else {
-          user.repos = [];
-          user.graphData = {};
         }
         this.setCurrentUser(user);
 
