@@ -341,8 +341,8 @@ export default {
     setCurrentUser(user) {
       this.user = user;
       this.tableRepos = this.user.repos;
-      // /* eslint-disable no-restricted-globals */
-      // history.pushState(null, null, `u=${this.user.login}`);
+      /* eslint-disable no-restricted-globals */
+      history.pushState(null, null, `?u=${this.user.login}`);
     },
     filterRepos(filter) {
       this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase()));
