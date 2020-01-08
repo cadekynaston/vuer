@@ -345,7 +345,10 @@ export default {
       history.pushState(null, null, `?u=${this.user.login}`);
     },
     filterRepos(filter) {
-      this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase()));
+      this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase())
+        || repo.created_at.toLowerCase().includes(filter.toLowerCase())
+        || repo.updated_at.toLowerCase().includes(filter.toLowerCase())
+        || (repo.language && repo.language.toLowerCase().includes(filter.toLowerCase())));
     },
     updateUserNotFound() {
       this.userNotFound = false;
