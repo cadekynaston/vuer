@@ -37,6 +37,16 @@
    margin-right: auto;
  }
 
+ .help-icon {
+  width: 1.5em !important;
+  height: 1.5em !important;
+
+  @include tablet {
+   width: 2em !important;
+   height: 2em !important;
+  }
+}
+
  .align-items-center { align-items: center; }
 
  .overflow-auto { overflow: auto; }
