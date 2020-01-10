@@ -1,9 +1,4 @@
 
-<p align="center">
-  <a href="https://vuejs.org/">
-    <img alt="Gatsby" src="https://vuejs.org/images/logo.png" width="60" />
-  </a>
-</p>
 <h1 align="center">
   VUER
 </h1>
