@@ -31,7 +31,7 @@
         </p>
       </div>
       <span @click="helpClicked" class="icon is-large hover-pointer">
-        <font-awesome-icon class="fa-2x" :icon="['far', 'question-circle']" />
+        <font-awesome-icon class="fas help-icon" :icon="['far', 'question-circle']" />
       </span>
 
       <div id="modal"
