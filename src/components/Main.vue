@@ -35,7 +35,7 @@
                         v-if="u.id === user.id"
                         class="is-size-7"
                       >
-                        <br />last pulled: {{formatDate(u.dataTimestamp, 'MMM Do @ H:MM')}}
+                        <br />Latest Fetch: {{formatDate(u.dataTimestamp, 'MMM Do @ H:MM')}}
                       </span>
                       <!-- <button v-if="u.id === user.id" class="button is-small is-right absolute-right">Refresh</button> -->
                     </a>
