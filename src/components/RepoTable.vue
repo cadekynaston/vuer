@@ -69,7 +69,7 @@
           class="hover-pointer"
           data-tracking="table-header"
         >
-            language
+            Language
             <span class="icon fa-border" :class="sortSettings.column === 'language' ? 'has-background-warning' : ''">
               <font-awesome-icon :icon="['fas', 'sort']" />
             </span>
