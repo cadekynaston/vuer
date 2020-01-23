@@ -56,12 +56,14 @@ const createNumberOfReposByYear = (repos) => {
         borderColor: '#3298dc',
         fill: false,
         data: [],
+        lineTension: 0,
       },
       {
         label: 'Total size of repos (in MB)',
         borderColor: '#48C774',
         fill: false,
         data: [],
+        lineTension: 0,
       },
     ],
   });
