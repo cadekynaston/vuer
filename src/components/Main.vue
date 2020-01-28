@@ -253,9 +253,9 @@
     </div>
 
     <div v-if="user">
-      <label class="checkbox" style="font-size: 0.8rem; margin-top: 0.25rem">
+      <label class="checkbox" style="font-size: 0.8rem; margin-top: 1.25rem">
         <input type="checkbox" name="show-forks" v-bind:checked="includeForks" @change="toggleForks(!includeForks)">
-        Show forked repositories
+        Enable forked repositories
       </label>
     </div>
 
