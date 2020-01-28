@@ -252,6 +252,13 @@
       </div>
     </div>
 
+    <div v-if="user">
+      <label class="checkbox" style="font-size: 0.8rem; margin-top: 0.25rem">
+        <input type="checkbox" name="show-forks" v-model="includeForks" @change="updateGraph">
+        Show forked repositories
+      </label>
+    </div>
+
     <div class="footer margin-top has-background-white">
       <p class="has-text-centered">Created by <a href="https://cade.codes" target="_blank" data-tracking="footer-link">Cade Kynaston</a> using <a href="https://vuejs.org/" target="_blank" data-tracking="footer-link">Vue</a> + <a href="https://www.chartjs.org/" target="_blank" data-tracking="footer-link">Charts.js</a> + <a href="https://bulma.io/" target="_blank" data-tracking="footer-link">Bulma</a>.<br class="is-hidden-desktop"/> Check out the code <a href="https://github.com/cadekynaston/vuer" target="_blank" data-tracking="footer-link">here</a>.</p>
 
