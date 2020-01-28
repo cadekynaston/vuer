@@ -254,7 +254,7 @@
 
     <div v-if="user">
       <label class="checkbox" style="font-size: 0.8rem; margin-top: 0.25rem">
-        <input type="checkbox" name="show-forks" v-model="includeForks" @change="updateGraph">
+        <input type="checkbox" name="show-forks" v-bind:checked="includeForks" @change="toggleForks(!includeForks)">
         Show forked repositories
       </label>
     </div>
@@ -339,12 +339,12 @@ export default {
     },
     setCurrentUser(user) {
       this.user = user;
-      this.tableRepos = this.user.repos;
+      this.tableRepos = this.relevantRepos;
       /* eslint-disable no-restricted-globals */
       history.pushState(null, null, `?u=${this.user.login}`);
     },
     filterRepos(filter) {
-      this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase())
+      this.tableRepos = this.relevantRepos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase())
         || repo.created_at.toLowerCase().includes(filter.toLowerCase())
         || repo.updated_at.toLowerCase().includes(filter.toLowerCase())
         || (repo.language && repo.language.toLowerCase().includes(filter.toLowerCase())));
@@ -359,6 +359,7 @@ export default {
     },
     toggleForks(includeForks) {
       this.includeForks = includeForks;
+      this.tableRepos = this.relevantRepos;
       this.updateGraph();
     },
   },
