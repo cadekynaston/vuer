@@ -298,7 +298,7 @@ export default {
       users: [],
       userNotFound: false,
       isLoading: false,
-      includeForks: true,
+      includeForks: false,
       graphData: {},
       tableRepos: [],
     };
