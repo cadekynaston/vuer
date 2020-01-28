@@ -188,7 +188,7 @@
       <div class="container margin-top">
         <div v-if="user" class="box is-primary">
           <h2 class="title is-2">Overview</h2>
-          <div v-if="user.graphData">
+          <div v-if="graphData">
             <div class="columns is-desktop">
 
               <div
@@ -198,7 +198,7 @@
                 <p class="is-size-5"><strong>Repos Over Time</strong></p>
                 <LineChart
                   class="chart"
-                  :chartData="user.graphData.numberOfReposByYear"
+                  :chartData="graphData.numberOfReposByYear"
                 />
               </div>
 
@@ -209,7 +209,7 @@
                 <p class="is-size-5"><strong>Popular Repos</strong></p>
                 <Bar
                   class="chart"
-                  :chartData="user.graphData.topReposByStars"
+                  :chartData="graphData.topReposByStars"
                 />
               </div>
 
@@ -220,7 +220,7 @@
                 <p class="is-size-5"><strong>Languages</strong></p>
                 <Doughnut
                   class="chart"
-                  :chartData="user.graphData.languageTypes"
+                  :chartData="graphData.languageTypes"
                 />
               </div>
 
@@ -291,6 +291,8 @@ export default {
       users: [],
       userNotFound: false,
       isLoading: false,
+      includeForks: true,
+      graphData: {},
       tableRepos: [],
     };
   },
@@ -309,19 +311,9 @@ export default {
         this.userNotFound = true;
       } else {
         this.userNotFound = false;
-        user.repos = [];
-        user.graphData = {};
-
-        if (user.public_repos > 0) {
-          const repos = await getGithubUserRepos(user.repos_url);
-          if (repos.length > 0) {
-            const graphData = createGraphData(repos);
-            user.graphData = graphData;
-          }
-
-          user.repos = repos;
-        }
+        user.repos = user.public_repos > 0 ? await getGithubUserRepos(user.repos_url) : [];
         this.setCurrentUser(user);
+        this.updateGraph();
 
         /**
        * Checking if this user already exists and then removing them to avoid duplicates.
@@ -350,11 +342,26 @@ export default {
         || repo.updated_at.toLowerCase().includes(filter.toLowerCase())
         || (repo.language && repo.language.toLowerCase().includes(filter.toLowerCase())));
     },
+    updateGraph() {
+      if (this.relevantRepos.length > 0) {
+        this.graphData = createGraphData(this.relevantRepos);
+      }
+    },
     updateUserNotFound() {
       this.userNotFound = false;
     },
+    toggleForks(includeForks) {
+      this.includeForks = includeForks;
+      this.updateGraph();
+    },
   },
   computed: {
+    relevantRepos() {
+      const withForkFilter = this.includeForks
+        ? this.user.repos
+        : this.user.repos.filter(repo => !repo.fork);
+      return this.user ? withForkFilter : [];
+    },
     userCompanies() {
       if (this.user && this.user.company) {
         return this.user.company.trim().split(' ');
