@@ -103,7 +103,6 @@ export const getGithubUserRepos = async (url) => {
     ...remainingRepos,
   ];
   const reposCleaned = allRepos
-    .filter(repo => !repo.fork)
     .sort((a, b) => b.stargazers_count - a.stargazers_count)
     .map(repo => pruneRepoData(repo));
 

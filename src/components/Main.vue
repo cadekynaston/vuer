@@ -188,7 +188,7 @@
       <div class="container margin-top">
         <div v-if="user" class="box is-primary">
           <h2 class="title is-2">Overview</h2>
-          <div v-if="user.graphData">
+          <div v-if="graphData">
             <div class="columns is-desktop">
 
               <div
@@ -198,7 +198,7 @@
                 <p class="is-size-5"><strong>Repos Over Time</strong></p>
                 <LineChart
                   class="chart"
-                  :chartData="user.graphData.numberOfReposByYear"
+                  :chartData="graphData.numberOfReposByYear"
                 />
               </div>
 
@@ -209,7 +209,7 @@
                 <p class="is-size-5"><strong>Popular Repos</strong></p>
                 <Bar
                   class="chart"
-                  :chartData="user.graphData.topReposByStars"
+                  :chartData="graphData.topReposByStars"
                 />
               </div>
 
@@ -220,7 +220,7 @@
                 <p class="is-size-5"><strong>Languages</strong></p>
                 <Doughnut
                   class="chart"
-                  :chartData="user.graphData.languageTypes"
+                  :chartData="graphData.languageTypes"
                 />
               </div>
 
@@ -232,7 +232,7 @@
                   <p class="is-marginless"><strong>NOTE:</strong></p>
                   <ul style="margin-top: 0">
                     <li>Datasets may be toggled by clicking on the key for each graph.</li>
-                    <li>Forked and private repos have been omitted from these results.</li>
+                    <li>Private {{includeForks ? "" : "and forked "}}repos have been omitted from these results.</li>
                   </ul>
                 </div>
               </div>
@@ -250,6 +250,13 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="container" v-if="user">
+      <label class="checkbox" style="font-size: 0.8rem; margin-top: 1.25rem">
+        <input type="checkbox" name="show-forks" v-bind:checked="includeForks" @change="toggleForks(!includeForks)">
+        Enable forked repositories
+      </label>
     </div>
 
     <div class="footer margin-top has-background-white">
@@ -291,6 +298,8 @@ export default {
       users: [],
       userNotFound: false,
       isLoading: false,
+      includeForks: false,
+      graphData: {},
       tableRepos: [],
     };
   },
@@ -309,19 +318,9 @@ export default {
         this.userNotFound = true;
       } else {
         this.userNotFound = false;
-        user.repos = [];
-        user.graphData = {};
-
-        if (user.public_repos > 0) {
-          const repos = await getGithubUserRepos(user.repos_url);
-          if (repos.length > 0) {
-            const graphData = createGraphData(repos);
-            user.graphData = graphData;
-          }
-
-          user.repos = repos;
-        }
+        user.repos = user.public_repos > 0 ? await getGithubUserRepos(user.repos_url) : [];
         this.setCurrentUser(user);
+        this.updateGraph();
 
         /**
        * Checking if this user already exists and then removing them to avoid duplicates.
@@ -340,21 +339,37 @@ export default {
     },
     setCurrentUser(user) {
       this.user = user;
-      this.tableRepos = this.user.repos;
+      this.tableRepos = this.relevantRepos;
       /* eslint-disable no-restricted-globals */
       history.pushState(null, null, `?u=${this.user.login}`);
     },
     filterRepos(filter) {
-      this.tableRepos = this.user.repos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase())
+      this.tableRepos = this.relevantRepos.filter(repo => repo.name.toLowerCase().includes(filter.toLowerCase())
         || repo.created_at.toLowerCase().includes(filter.toLowerCase())
         || repo.updated_at.toLowerCase().includes(filter.toLowerCase())
         || (repo.language && repo.language.toLowerCase().includes(filter.toLowerCase())));
     },
+    updateGraph() {
+      if (this.relevantRepos.length > 0) {
+        this.graphData = createGraphData(this.relevantRepos);
+      }
+    },
     updateUserNotFound() {
       this.userNotFound = false;
     },
+    toggleForks(includeForks) {
+      this.includeForks = includeForks;
+      this.tableRepos = this.relevantRepos;
+      this.updateGraph();
+    },
   },
   computed: {
+    relevantRepos() {
+      const withForkFilter = this.includeForks
+        ? this.user.repos
+        : this.user.repos.filter(repo => !repo.fork);
+      return this.user ? withForkFilter : [];
+    },
     userCompanies() {
       if (this.user && this.user.company) {
         return this.user.company.trim().split(' ');
