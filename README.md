@@ -7,6 +7,16 @@
 
 Vuer is a GitHub profile viewing tool. [Check it out!](https://vuer.now.sh?u=yyx990803)
 
+## Contributing
+PR's welcome! Feel free to submit a PR if you want something added or changed. You may also submit an issue.
+
+## Running the Project
+Once you have the project on your machine, run:
+```
+npm install
+npm run serve
+```
+
 ## Project Details
 This was my first attempt at creating something using [Vue](https://vuejs.org/) and I found it to be very enjoyable. The docs are great and the syntax is pretty easy to pick up.
 
