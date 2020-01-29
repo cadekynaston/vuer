@@ -320,7 +320,7 @@ export default {
         this.userNotFound = false;
         user.repos = user.public_repos > 0 ? await getGithubUserRepos(user.repos_url) : [];
         this.setCurrentUser(user);
-        this.updateGraph();
+        this.updateGraphData();
 
         /**
        * Checking if this user already exists and then removing them to avoid duplicates.
@@ -336,6 +336,7 @@ export default {
     changeCurrentUser(id) {
       const index = this.users.findIndex(user => user.id === id);
       this.setCurrentUser(this.users[index]);
+      this.updateGraphData();
     },
     setCurrentUser(user) {
       this.user = user;
@@ -349,7 +350,7 @@ export default {
         || repo.updated_at.toLowerCase().includes(filter.toLowerCase())
         || (repo.language && repo.language.toLowerCase().includes(filter.toLowerCase())));
     },
-    updateGraph() {
+    updateGraphData() {
       if (this.relevantRepos.length > 0) {
         this.graphData = createGraphData(this.relevantRepos);
       }
@@ -360,7 +361,7 @@ export default {
     toggleForks(includeForks) {
       this.includeForks = includeForks;
       this.tableRepos = this.relevantRepos;
-      this.updateGraph();
+      this.updateGraphData();
     },
   },
   computed: {
